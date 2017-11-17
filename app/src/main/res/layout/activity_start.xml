@@ -11,9 +11,9 @@
     >
 
     <ImageView
-        android:layout_width="71dp"
+        android:layout_width="0dp"
         android:layout_height="142dp"
-        app:srcCompat="@drawable/spaceman"
+        app:srcCompat="@drawable/rocket"
         android:id="@+id/imageview_spaceman"
         android:layout_marginStart="16dp"
         app:layout_constraintLeft_toLeftOf="parent"

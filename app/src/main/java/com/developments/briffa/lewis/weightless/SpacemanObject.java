@@ -19,6 +19,9 @@ public class SpacemanObject {
     private Drawable image;
     private Paint mPaint;
 
+    private final static float HEIGHT = 300f;
+    private final static float WIDTH = 300f;
+
     public SpacemanObject(float x, Drawable image)
     {
         this.x = x;
@@ -33,15 +36,15 @@ public class SpacemanObject {
     {
         x += dx;
         if(x < 0) {
-            image.setBounds(0, (int) 100f, (int) 284f, (int) 568f);
+            image.setBounds(0, (int) 100f, (int) WIDTH, (int) HEIGHT);
             image.draw(canvas);
-        } else if(x + 284f <= canvas.getWidth()) {
-            image.setBounds((int) x, (int) 100f, (int) (x + 284f), (int) 568f);
+        } else if(x + WIDTH <= canvas.getWidth()) {
+            image.setBounds((int) x, (int) 100f, (int) (x + WIDTH), (int) HEIGHT);
 //            canvas.drawRect(x, 0f, x+100f, 100f, mPaint);
             image.draw(canvas);
         } else {
             //canvas.drawRect(canvas.getWidth()-100f, 0f, canvas.getWidth(), 100f, mPaint);
-            image.setBounds((int)(canvas.getWidth()-284f), (int)100f, canvas.getWidth(), (int)586f);
+            image.setBounds((int)(canvas.getWidth()-WIDTH), (int)100f, canvas.getWidth(), (int)HEIGHT);
             image.draw(canvas);
         }
     }
@@ -50,6 +53,10 @@ public class SpacemanObject {
     {
         return this.x;
     }
+
+    public float getWidth() { return WIDTH; }
+
+    public float getHeight() { return HEIGHT; }
 
     public void setDx(float dx)
     {

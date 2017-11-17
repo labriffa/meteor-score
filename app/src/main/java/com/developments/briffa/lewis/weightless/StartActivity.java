@@ -17,6 +17,7 @@ import android.widget.ImageButton;
 public class StartActivity extends AppCompatActivity {
 
     private ImageButton mButtonStart;
+    private ImageButton mButtonEncyclopedia;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,15 @@ public class StartActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent gameIntent = new Intent(StartActivity.this, GameActivity.class);
                 startActivity(gameIntent);
+            }
+        });
+
+        mButtonEncyclopedia = (ImageButton) findViewById(R.id.button_encyclopedia);
+        mButtonEncyclopedia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent encyclopediaIntent = new Intent(StartActivity.this, EncyclopediaActivity.class);
+                startActivity(encyclopediaIntent);
             }
         });
     }

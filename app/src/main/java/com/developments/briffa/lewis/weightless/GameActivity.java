@@ -40,4 +40,26 @@ public class GameActivity extends AppCompatActivity {
 
         mRelativeLayout.addView(mGameSurfaceView);
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mGameSurfaceView.setRunning(false);
+        mGameSurfaceView.quitHandlerThread();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mGameSurfaceView.setRunning(false);
+        mGameSurfaceView.quitHandlerThread();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("DESTROY", "DESTROYED");
+        mGameSurfaceView.setRunning(false);
+        mGameSurfaceView.quitHandlerThread();
+    }
 }
