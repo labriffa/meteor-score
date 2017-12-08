@@ -1,10 +1,10 @@
-package com.developments.briffa.lewis.weightless;
+package com.developments.briffa.lewis.weightless.game.elements;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-public class MeteorObject {
+public class MeteorElement extends CanvasElement {
 
     private float x;
     private float y;
@@ -12,7 +12,7 @@ public class MeteorObject {
     private Paint mPaint;
     private float width;
 
-    public MeteorObject(float x, float y, int width, int color) {
+    public MeteorElement(float x, float y, int width, int color) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -23,7 +23,7 @@ public class MeteorObject {
 
     public void move(Canvas canvas) {
         y += dy;
-        canvas.drawRect(x,y,x+width,y+100,mPaint);
+        canvas.drawRect(x,y,x+width,y+75,mPaint);
     }
 
     public float getY() {
@@ -36,6 +36,11 @@ public class MeteorObject {
 
     public float getWidth() {
         return width;
+    }
+
+    @Override
+    public float getHeight() {
+        return 0;
     }
 
     public float getDy() {

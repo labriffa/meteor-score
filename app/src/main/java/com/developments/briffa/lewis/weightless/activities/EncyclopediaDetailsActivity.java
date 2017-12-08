@@ -1,10 +1,12 @@
-package com.developments.briffa.lewis.weightless;
+package com.developments.briffa.lewis.weightless.activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.developments.briffa.lewis.weightless.R;
 
 import org.w3c.dom.Text;
 
@@ -24,12 +26,13 @@ public class EncyclopediaDetailsActivity extends AppCompatActivity {
         int image = intent.getExtras().getInt("ID");
         String description = intent.getExtras().getString("DESCRIPTION");
 
-        mTextViewPlanetName = (TextView) findViewById(R.id.textView2);
-        mImageViewPlanet = (ImageView) findViewById(R.id.imageView2);
-        mTextViewPlanetDescription = (TextView) findViewById(R.id.textView4);
+        mImageViewPlanet = (ImageView) findViewById(R.id.imageView5);
+        mTextViewPlanetDescription = (TextView) findViewById(R.id.textView5);
 
-        mTextViewPlanetName.setText(name);
         mImageViewPlanet.setImageResource(image);
         mTextViewPlanetDescription.setText(description);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(name);
     }
 }

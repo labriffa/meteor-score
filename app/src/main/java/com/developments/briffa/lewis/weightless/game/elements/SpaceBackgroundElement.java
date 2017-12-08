@@ -1,4 +1,4 @@
-package com.developments.briffa.lewis.weightless;
+package com.developments.briffa.lewis.weightless.game.elements;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -6,7 +6,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 
-public class SpaceBackgroundObject {
+public class SpaceBackgroundElement extends CanvasElement {
     private Paint mPaintWhite;
     private Paint mPaintBlack;
     private boolean isStart;
@@ -16,7 +16,7 @@ public class SpaceBackgroundObject {
     private float x;
     private float dy;
 
-    public SpaceBackgroundObject(Drawable image, float x, float y) {
+    public SpaceBackgroundElement(Drawable image, float x, float y) {
         mPaintBlack = new Paint();
         mPaintBlack.setColor(Color.parseColor("#252525"));
         isStart = true;
@@ -41,16 +41,30 @@ public class SpaceBackgroundObject {
                 canvas.drawCircle(5*(float)(Math.random() * canvas.getWidth()), 5*(float)(Math.random() * canvas.getHeight()*2), (float)Math.random() * 2 + 10, mPaintWhite);
             }
         }
-
-//        y += dy;
-//        image1.setBounds((int)x, 0, canvas.getWidth(), (int)(y));
-//        image1.draw(canvas);
-//        image2.setBounds((int)x, (int)y, canvas.getWidth(), (int)(y+canvas.getHeight()));
-//        image2.draw(canvas);
     }
 
     public void setStart(boolean isStart)
     {
         this.isStart = isStart;
+    }
+
+    @Override
+    public float getX() {
+        return 0;
+    }
+
+    @Override
+    public float getY() {
+        return 0;
+    }
+
+    @Override
+    public float getWidth() {
+        return 0;
+    }
+
+    @Override
+    public float getHeight() {
+        return 0;
     }
 }

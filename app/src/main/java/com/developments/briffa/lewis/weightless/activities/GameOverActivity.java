@@ -1,12 +1,12 @@
-package com.developments.briffa.lewis.weightless;
+package com.developments.briffa.lewis.weightless.activities;
 
 import android.content.Intent;
-import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
+
+import com.developments.briffa.lewis.weightless.R;
 
 public class GameOverActivity extends AppCompatActivity {
 
@@ -34,5 +34,7 @@ public class GameOverActivity extends AppCompatActivity {
                 startActivity(menuIntent);
             }
         });
+
+        getSupportActionBar().hide();
     }
 }

@@ -1,17 +1,16 @@
-package com.developments.briffa.lewis.weightless;
+package com.developments.briffa.lewis.weightless.activities;
 
 import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.support.constraint.ConstraintLayout;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import java.util.logging.Logger;
+import com.developments.briffa.lewis.weightless.game.elements.GameSurfaceView;
+import com.developments.briffa.lewis.weightless.R;
 
 
 /**
@@ -28,6 +27,7 @@ public class GameActivity extends AppCompatActivity {
     private ImageView mImageViewSpaceman;
     private GameSurfaceView mGameSurfaceView;
     private RelativeLayout mRelativeLayout;
+    private MediaPlayer mMediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +39,9 @@ public class GameActivity extends AppCompatActivity {
         mRelativeLayout = (RelativeLayout) findViewById(R.id.activity_game);
 
         mRelativeLayout.addView(mGameSurfaceView);
+
+        getSupportActionBar().hide();
+
     }
 
     @Override
@@ -46,6 +49,7 @@ public class GameActivity extends AppCompatActivity {
         super.onStop();
         mGameSurfaceView.setRunning(false);
         mGameSurfaceView.quitHandlerThread();
+        mGameSurfaceView.getMediaPlayer().stop();
     }
 
     @Override
@@ -53,6 +57,7 @@ public class GameActivity extends AppCompatActivity {
         super.onPause();
         mGameSurfaceView.setRunning(false);
         mGameSurfaceView.quitHandlerThread();
+        mGameSurfaceView.getMediaPlayer().stop();
     }
 
     @Override
@@ -61,5 +66,6 @@ public class GameActivity extends AppCompatActivity {
         Log.d("DESTROY", "DESTROYED");
         mGameSurfaceView.setRunning(false);
         mGameSurfaceView.quitHandlerThread();
+        mGameSurfaceView.getMediaPlayer().stop();
     }
 }

@@ -1,11 +1,12 @@
-package com.developments.briffa.lewis.weightless;
+package com.developments.briffa.lewis.weightless.activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
+
+import com.developments.briffa.lewis.weightless.R;
 
 /**
  * Represents the start activity screen
@@ -41,5 +42,7 @@ public class StartActivity extends AppCompatActivity {
                 startActivity(encyclopediaIntent);
             }
         });
+
+        getSupportActionBar().hide();
     }
 }

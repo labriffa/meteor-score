@@ -10,7 +10,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.developments.briffa.lewis.weightless.GameOverActivity"
+    tools:context="com.developments.briffa.lewis.weightless.activities.GameOverActivity"
     android:background="@drawable/space_bg">
 
     <ImageView

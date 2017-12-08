@@ -1,4 +1,4 @@
-package com.developments.briffa.lewis.weightless;
+package com.developments.briffa.lewis.weightless.game.elements;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,8 +13,9 @@ import android.util.Log;
  * @author lewisbriffa
  * created on 11/11/2017
  */
-public class SpacemanObject {
+public class SpacemanElement extends CanvasElement {
     private float x;
+    private float y;
     private float dx;
     private Drawable image;
     private Paint mPaint;
@@ -22,7 +23,7 @@ public class SpacemanObject {
     private final static float HEIGHT = 300f;
     private final static float WIDTH = 300f;
 
-    public SpacemanObject(float x, Drawable image)
+    public SpacemanElement(float x, Drawable image)
     {
         this.x = x;
         this.image = image;
@@ -34,24 +35,24 @@ public class SpacemanObject {
 
     public void move(Canvas canvas)
     {
-        x += dx;
-        if(x < 0) {
-            image.setBounds(0, (int) 100f, (int) WIDTH, (int) HEIGHT);
-            image.draw(canvas);
-        } else if(x + WIDTH <= canvas.getWidth()) {
-            image.setBounds((int) x, (int) 100f, (int) (x + WIDTH), (int) HEIGHT);
-//            canvas.drawRect(x, 0f, x+100f, 100f, mPaint);
-            image.draw(canvas);
-        } else {
-            //canvas.drawRect(canvas.getWidth()-100f, 0f, canvas.getWidth(), 100f, mPaint);
-            image.setBounds((int)(canvas.getWidth()-WIDTH), (int)100f, canvas.getWidth(), (int)HEIGHT);
-            image.draw(canvas);
+        // check if this object is too far left of the screen
+        if(x < 0 || x + WIDTH >= canvas.getWidth()) {
+            x = x < 0 ? 0 : canvas.getWidth()-WIDTH;
         }
+
+        x += dx;
+        image.setBounds((int) x, (int) 100f, (int) (x + WIDTH), (int) HEIGHT);
+        image.draw(canvas);
     }
 
     public float getX()
     {
         return this.x;
+    }
+
+    @Override
+    public float getY() {
+        return 0;
     }
 
     public float getWidth() { return WIDTH; }
