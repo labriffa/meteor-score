@@ -13,21 +13,19 @@ import android.util.Log;
  * @author lewisbriffa
  * created on 11/11/2017
  */
-public class SpacemanElement extends CanvasElement {
-    private float x;
-    private float y;
+public class PlayerElement extends CanvasElement {
+
     private float dx;
+    private float dy;
     private Drawable image;
     private Paint mPaint;
 
-    private final static float HEIGHT = 300f;
-    private final static float WIDTH = 300f;
-
-    public SpacemanElement(float x, Drawable image)
+    public PlayerElement(float x, float y, int width, int height, Drawable image)
     {
-        this.x = x;
+        super(x, y, width, height);
         this.image = image;
         dx = 0;
+        dy = 0;
         mPaint = new Paint();
         mPaint.setColor(Color.RED);
         mPaint.setTextSize(100);
@@ -36,28 +34,20 @@ public class SpacemanElement extends CanvasElement {
     public void move(Canvas canvas)
     {
         // check if this object is too far left of the screen
-        if(x < 0 || x + WIDTH >= canvas.getWidth()) {
-            x = x < 0 ? 0 : canvas.getWidth()-WIDTH;
+        if(getX() < 0 || getX() + getWidth() >= canvas.getWidth()) {
+            setX(getX() < 0 ? 0 : canvas.getWidth()-getWidth());
         }
 
-        x += dx;
-        image.setBounds((int) x, (int) 100f, (int) (x + WIDTH), (int) HEIGHT);
+        setX(getX()+dx);
+        setY(getY()+dy);
+        image.setBounds((int) getX(), (int) getY(), (int) (getX() + getWidth()), (int) (getY() + getHeight()));
         image.draw(canvas);
     }
 
-    public float getX()
-    {
-        return this.x;
-    }
-
-    @Override
-    public float getY() {
-        return 0;
-    }
-
-    public float getWidth() { return WIDTH; }
-
-    public float getHeight() { return HEIGHT; }
+//    @Override
+//    public float getY() {
+//        return 0;
+//    }
 
     public void setDx(float dx)
     {

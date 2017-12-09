@@ -14,6 +14,7 @@ import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Vibrator;
 import android.support.v4.content.ContextCompat;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -22,6 +23,7 @@ import android.view.View;
 
 import com.developments.briffa.lewis.weightless.R;
 import com.developments.briffa.lewis.weightless.activities.GameOverActivity;
+import com.developments.briffa.lewis.weightless.factories.GameElementFactory;
 
 import java.util.ArrayList;
 
@@ -32,30 +34,38 @@ import java.util.ArrayList;
  * @author lewisbriffa
  * created on 11/11/2017
  */
-public class GameSurfaceView extends SurfaceView implements View.OnTouchListener {
+public class GameSurfaceView extends SurfaceView implements View.OnTouchListener, SurfaceHolder.Callback {
 
     private SurfaceHolder mSurfaceHolder;
     private boolean isRunning = true;
     private Paint mPaint;
-    private SpacemanElement mSpacemanElement;
+    private PlayerElement mPlayerElement;
     private SensorManager mSensorManager;
     private Sensor mSensor;
+    private Vibrator mVibrator;
     private float moveX;
     private Handler mHandler;
     private HandlerThread mHandlerThread;
     private MeteorElement mMeteorElement;
     private Drawable spacebg;
-    private SpaceBackgroundElement mSpaceBackgroundElement;
+    //private SpaceBackgroundElement mSpaceBackgroundElement;
     private PauseElement mPauseElement;
     private StarElement mStarElement;
     private int score;
     private MediaPlayer mMediaPlayer;
     private MediaPlayer mCoinMediaPlayer;
+    private GameElementFactory mGameElementFactory;
+    private StarTrailElement mStarTrailElement;
+    private float x = 0;
+    private float y = 0;
 
     public GameSurfaceView(final Context context) {
         super(context);
 
         mSurfaceHolder = getHolder();
+
+        // observe surface holders lifecycle e.g. created, destroyed
+        mSurfaceHolder.addCallback(this);
 
         mHandlerThread = new HandlerThread("My First HandlerThread");
         mHandlerThread.start();
@@ -66,11 +76,11 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
 
         score = 0;
 
-        mSpacemanElement = new SpacemanElement(0, ContextCompat.getDrawable(context, R.drawable.rocket));
         spacebg = ContextCompat.getDrawable(context, R.drawable.space_bg);
 
         mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mVibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 
         mSensorManager.registerListener(new SensorEventListener() {
             @Override
@@ -81,38 +91,57 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
 
                         if(isRunning) {
 
-                            mSpacemanElement.setDx(-(event.values[0]*8));
+                            mPlayerElement.setDx(-(event.values[0]*8));
 
                             Canvas canvas = mSurfaceHolder.lockCanvas();
                             clearScreen(canvas);
+
                             setup(canvas);
                             drawHud(canvas);
 
                             if(mPauseElement == null) {
-                                mPauseElement = new PauseElement(canvas.getWidth()-125,25,100,200, Color.RED);
+                                mPauseElement = (PauseElement) mGameElementFactory.getInstance("pause");
+                            }
+
+                            if(mStarTrailElement == null) {
+                                mStarTrailElement = (StarTrailElement) mGameElementFactory.getInstance("star-trail");
+                            }
+
+                            if(mStarTrailElement.getY() <= - 1000) {
+                                mStarTrailElement = (StarTrailElement) mGameElementFactory.getInstance("star-trail");
+                            } else {
+                                mStarTrailElement.draw(canvas);
                             }
 
                             if(mStarElement.getY() <= -1000) {
-                                mStarElement = new StarElement((int)(Math.random()*canvas.getWidth()),canvas.getHeight(),50,50,ContextCompat.getDrawable(context, R.drawable.star));
+                                mStarElement = (StarElement) mGameElementFactory.getInstance("star");
                             } else {
                                 mStarElement.move(canvas);
                             }
 
                             if(hasCollided(mMeteorElement)) {
+                                mVibrator.vibrate(500);
                                 gameOver();
                             }
 
+                            ArrayList<StarElement> starElements = mStarTrailElement.getStarElements();
+                            for(StarElement starElement : starElements) {
+                                if(hasCollided(starElement)) {
+                                    starPickup(canvas, starElement);
+                                }
+                            }
+
                             if(hasCollided(mStarElement)) {
-                                starPickup(canvas);
+                                starPickup(canvas, mStarElement);
                             }
 
                             if(mMeteorElement.getY()+100 <= 0) {
-                                mMeteorElement = new MeteorElement((int)(Math.random()*canvas.getWidth()), canvas.getHeight(), (int)(Math.random()*canvas.getWidth()/2), randomLightColor());
+                                mMeteorElement = (MeteorElement) mGameElementFactory.getInstance("meteor");
                             } else {
                                 mMeteorElement.move(canvas);
                             }
 
-                            mSpacemanElement.move(canvas);
+                            mPlayerElement.move(canvas);
                             mSurfaceHolder.unlockCanvasAndPost(canvas);
 
                         }
@@ -183,9 +212,22 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
     }
 
     private boolean hasCollided(CanvasElement canvasElement) {
-        return canvasElement.getWidth() + canvasElement.getX() >= mSpacemanElement.getX() && canvasElement.getWidth() + canvasElement.getX() <= mSpacemanElement.getX() + mSpacemanElement.getWidth() && canvasElement.getY() <= mSpacemanElement.getHeight()
-                || canvasElement.getX() <= mSpacemanElement.getX() + mSpacemanElement.getWidth() && canvasElement.getX() >= mSpacemanElement.getX() && canvasElement.getY() <= mSpacemanElement.getHeight()
-                || mSpacemanElement.getX() >= canvasElement.getX() && mSpacemanElement.getX()+ mSpacemanElement.getWidth() <= canvasElement.getWidth()+canvasElement.getX() && canvasElement.getY() <= mSpacemanElement.getHeight();
+        return  (hasCollidedToLeftOfElement(canvasElement)
+                || hasCollidedToRightOfElement(canvasElement)
+                || hasCollidedBetweenElement(canvasElement))
+                && canvasElement.getY() <= mPlayerElement.getY() + mPlayerElement.getHeight();
+    }
+
+    private boolean hasCollidedToLeftOfElement(CanvasElement canvasElement) {
+        return canvasElement.getWidth() + canvasElement.getX() >= mPlayerElement.getX() && canvasElement.getWidth() + canvasElement.getX() <= mPlayerElement.getX() + mPlayerElement.getWidth();
+    }
+
+    private boolean hasCollidedBetweenElement(CanvasElement canvasElement) {
+        return mPlayerElement.getX() >= canvasElement.getX() && mPlayerElement.getX()+ mPlayerElement.getWidth() <= canvasElement.getWidth()+canvasElement.getX();
+    }
+
+    private boolean hasCollidedToRightOfElement(CanvasElement canvasElement) {
+        return canvasElement.getX() <= mPlayerElement.getX() + mPlayerElement.getWidth() && canvasElement.getX() >= mPlayerElement.getX();
     }
 
     private void drawHud(Canvas canvas) {
@@ -206,20 +248,20 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
     private void setup(Canvas canvas) {
 
         // create space background
-        if (mSpaceBackgroundElement == null) {
-            mSpaceBackgroundElement = new SpaceBackgroundElement(spacebg, 0, canvas.getHeight());
-        } else {
-            mSpaceBackgroundElement.draw(canvas);
-        }
+//        if (mSpaceBackgroundElement == null) {
+//            mSpaceBackgroundElement = new SpaceBackgroundElement(spacebg, 0, canvas.getHeight());
+//        } else {
+//            mSpaceBackgroundElement.draw(canvas);
+//        }
 
         // create meteor object
         if(mMeteorElement == null) {
-            mMeteorElement = new MeteorElement((int)(Math.random()*canvas.getWidth()), canvas.getHeight(), (int)(Math.random()*canvas.getWidth()/2), randomLightColor());
+            mMeteorElement = (MeteorElement) mGameElementFactory.getInstance("meteor");
         }
 
         // create star object
         if(mStarElement == null) {
-            mStarElement = new StarElement((int)(Math.random()*canvas.getWidth()),canvas.getHeight(),50,50,ContextCompat.getDrawable(getContext(), R.drawable.star));
+            mStarElement = (StarElement) mGameElementFactory.getInstance("star");
         } else {
             mStarElement.move(canvas);
         }
@@ -230,10 +272,10 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
         getContext().startActivity(gameOverIntent);
     }
 
-    private void starPickup(Canvas canvas) {
+    private void starPickup(Canvas canvas, StarElement starElement) {
         score += 1;
-        mStarElement = new StarElement((int)(Math.random()*canvas.getWidth()),canvas.getHeight(),50,50,ContextCompat.getDrawable(getContext(), R.drawable.star));
-        mStarElement.setY(canvas.getHeight()*2);
+        //mStarElement = (StarElement) mGameElementFactory.getInstance("star");
+        starElement.setY(canvas.getHeight()*2);
         mCoinMediaPlayer.start();
     }
 
@@ -261,5 +303,23 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
     private void initializeBackgroundMusic() {
         mMediaPlayer = MediaPlayer.create(getContext(), R.raw.rainbow);
         mMediaPlayer.start();
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        Canvas canvas = mSurfaceHolder.lockCanvas();
+        mGameElementFactory = new GameElementFactory(this.getContext(), canvas);
+        mPlayerElement = (PlayerElement) mGameElementFactory.getInstance("player");
+        mSurfaceHolder.unlockCanvasAndPost(canvas);
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+
     }
 }

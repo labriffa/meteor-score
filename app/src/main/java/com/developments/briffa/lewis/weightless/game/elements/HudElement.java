@@ -6,7 +6,7 @@ import android.support.v4.content.ContextCompat;
 
 import com.developments.briffa.lewis.weightless.R;
 
-public class HudElement extends CanvasElement {
+public class HudElement  {
 
     private Drawable pause;
     private Drawable star;
@@ -21,26 +21,6 @@ public class HudElement extends CanvasElement {
         pause.draw(canvas);
         star.setBounds(canvas.getWidth()-300, 25, canvas.getWidth()-200, 125);
         star.draw(canvas);
-    }
-
-    @Override
-    public float getX() {
-        return 0;
-    }
-
-    @Override
-    public float getY() {
-        return 0;
-    }
-
-    @Override
-    public float getWidth() {
-        return 0;
-    }
-
-    @Override
-    public float getHeight() {
-        return 0;
     }
 }
 
