@@ -22,10 +22,13 @@ import android.view.SurfaceView;
 import android.view.View;
 
 import com.developments.briffa.lewis.weightless.R;
+import com.developments.briffa.lewis.weightless.activities.Collidable;
+import com.developments.briffa.lewis.weightless.activities.CollisionDetector;
 import com.developments.briffa.lewis.weightless.activities.GameOverActivity;
 import com.developments.briffa.lewis.weightless.factories.GameElementFactory;
 
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 /**
  * Represents a game type surface view object responsible
@@ -59,6 +62,8 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
     private float x = 0;
     private float y = 0;
     private ArrayList<BulletElement> mBulletElements;
+    private CollisionDetector mCollisionDetector;
+    private ArrayList<Collidable> collidables = new ArrayList<Collidable>();
 
     public GameSurfaceView(final Context context) {
         super(context);
@@ -94,20 +99,17 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
 
                         if(isRunning) {
 
-
                             mPlayerElement.setDx(-(event.values[0]*8));
 
                             Canvas canvas = mSurfaceHolder.lockCanvas();
+
                             clearScreen(canvas);
 
-                            //canvas.scale(1, -1, canvas.getWidth() / 2, canvas.getHeight() / 2);
+                            canvas.scale(1, -1, canvas.getWidth() / 2, canvas.getHeight() / 2);
 
-                            setup(canvas);
+
+                            drawBackground(canvas);
                             drawHud(canvas);
-
-                            if(mPauseElement == null) {
-                                mPauseElement = (PauseElement) mGameElementFactory.getInstance("pause");
-                            }
 
                             if(mStarTrailElement == null) {
                                 mStarTrailElement = (StarTrailElement) mGameElementFactory.getInstance("star-trail");
@@ -125,34 +127,45 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
                                 mStarElement.move(canvas);
                             }
 
-                            if(hasCollided(mMeteorElement)) {
+                            if(mMeteorElement.getY() <= 0) {
+                                mMeteorElement = (MeteorElement) mGameElementFactory.getInstance("meteor");
+                            }
+
+                            if(CollisionDetector.hasCollided(mMeteorElement, mPlayerElement)) {
                                 mVibrator.vibrate(500);
                                 gameOver();
                             }
 
                             ArrayList<StarElement> starElements = mStarTrailElement.getStarElements();
                             for(StarElement starElement : starElements) {
-                                if(hasCollided(starElement)) {
+                                if(CollisionDetector.hasCollided(starElement, mPlayerElement)) {
                                     starPickup(canvas, starElement);
                                 }
                             }
 
-                            if(hasCollided(mStarElement)) {
+                            if(CollisionDetector.hasCollided(mStarElement, mPlayerElement)) {
                                 starPickup(canvas, mStarElement);
                             }
 
-                            if(mMeteorElement.getY()+100 <= 0) {
-                                mMeteorElement = (MeteorElement) mGameElementFactory.getInstance("meteor");
-                            } else {
-                                mMeteorElement.move(canvas);
+
+                            mMeteorElement.move(canvas);
+                            mStarElement.move(canvas);
+
+                            ListIterator<BulletElement> bulletElementListIterator = mBulletElements.listIterator();
+
+                            while(bulletElementListIterator.hasNext()) {
+
+                                BulletElement bulletElement = bulletElementListIterator.next();
+
+                                if(CollisionDetector.hasCollided(mMeteorElement, bulletElement)) {
+                                    mMeteorElement = (MeteorElement) mGameElementFactory.getInstance("meteor");
+                                    bulletElementListIterator.remove();
+                                    mVibrator.vibrate(200);
+                                } else {
+                                    bulletElement.move(canvas);
+                                }
                             }
 
-                            for(BulletElement bulletElement : mBulletElements) {
-                                if(bulletHasCollided(bulletElement)) {
-                                    mMeteorElement.setHasBeenHit(true);
-                                }
-                                bulletElement.move(canvas);
-                            }
                             mPlayerElement.move(canvas);
                             mSurfaceHolder.unlockCanvasAndPost(canvas);
 
@@ -205,48 +218,6 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
         return mMediaPlayer;
     }
 
-    private int randomLightColor() {
-        ArrayList<String> colorHex = new ArrayList<>();
-
-        colorHex.add("#1abc9c");
-        colorHex.add("#2ecc71");
-        colorHex.add("#3498db");
-        colorHex.add("#9b59b6");
-        colorHex.add("#16a085");
-        colorHex.add("#27ae60");
-        colorHex.add("#2980b9");
-        colorHex.add("#8e44ad");
-        colorHex.add("#e74c3c");
-        colorHex.add("#f39c12");
-        colorHex.add("#d35400");
-        colorHex.add("#bdc3c7");
-
-        return Color.parseColor(colorHex.get((int)(Math.random()*12)));
-        //return Color.rgb((int)(Math.random()*(256 - 150 + 1)), (int)(Math.random()*(256 - 150 + 1)), (int)(Math.random()*(256 - 150 + 1)));
-    }
-
-    private boolean hasCollided(CanvasElement canvasElement) {
-        return  (hasCollidedToLeftOfElement(canvasElement)
-                || hasCollidedToRightOfElement(canvasElement)
-                || hasCollidedBetweenElement(canvasElement))
-                && canvasElement.getY() <= mPlayerElement.getY() + mPlayerElement.getHeight();
-    }
-
-    private boolean bulletHasCollided(CanvasElement canvasElement) {
-        return canvasElement.getX() >= mMeteorElement.getX() && canvasElement.getX()+ canvasElement.getWidth() <= mMeteorElement.getWidth()+mMeteorElement.getX() && canvasElement.getY()+canvasElement.getHeight() >= mMeteorElement.getY();
-    }
-
-    private boolean hasCollidedToLeftOfElement(CanvasElement canvasElement) {
-        return canvasElement.getWidth() + canvasElement.getX() >= mPlayerElement.getX() && canvasElement.getWidth() + canvasElement.getX() <= mPlayerElement.getX() + mPlayerElement.getWidth();
-    }
-
-    private boolean hasCollidedBetweenElement(CanvasElement canvasElement) {
-        return mPlayerElement.getX() >= canvasElement.getX() && mPlayerElement.getX()+ mPlayerElement.getWidth() <= canvasElement.getWidth()+canvasElement.getX();
-    }
-
-    private boolean hasCollidedToRightOfElement(CanvasElement canvasElement) {
-        return canvasElement.getX() <= mPlayerElement.getX() + mPlayerElement.getWidth() && canvasElement.getX() >= mPlayerElement.getX();
-    }
 
     private void drawHud(Canvas canvas) {
         Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.pause_btn);
@@ -263,29 +234,6 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
         canvas.drawText(String.valueOf(score), canvas.getWidth()-375, 100, textPaint);
     }
 
-    private void setup(Canvas canvas) {
-
-        // create space background
-        if (mSpaceBackgroundElement == null) {
-            mSpaceBackgroundElement = new SpaceBackgroundElement(spacebg, 0, canvas.getHeight());
-        } else {
-            //mSpaceBackgroundElement.setY(y);
-            mSpaceBackgroundElement.draw(canvas);
-        }
-
-        // create meteor object
-        if(mMeteorElement == null) {
-            mMeteorElement = (MeteorElement) mGameElementFactory.getInstance("meteor");
-        }
-
-        // create star object
-        if(mStarElement == null) {
-            mStarElement = (StarElement) mGameElementFactory.getInstance("star");
-        } else {
-            mStarElement.move(canvas);
-        }
-    }
-
     private void gameOver() {
         Intent gameOverIntent = new Intent(getContext(), GameOverActivity.class);
         getContext().startActivity(gameOverIntent);
@@ -299,7 +247,7 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
     }
 
     private void clearScreen(Canvas canvas) {
-        canvas.drawColor(Color.WHITE, PorterDuff.Mode.CLEAR);
+        canvas.drawColor(Color.BLACK, PorterDuff.Mode.CLEAR);
     }
 
     private void pause() {
@@ -328,7 +276,12 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
     public void surfaceCreated(SurfaceHolder holder) {
         Canvas canvas = mSurfaceHolder.lockCanvas();
         mGameElementFactory = new GameElementFactory(this.getContext(), canvas);
+        mSpaceBackgroundElement = new SpaceBackgroundElement(spacebg, 0, canvas.getHeight());
+        mSpaceBackgroundElement.draw(canvas);
         mPlayerElement = (PlayerElement) mGameElementFactory.getInstance("player");
+        mMeteorElement = (MeteorElement) mGameElementFactory.getInstance("meteor");
+        mPauseElement = (PauseElement) mGameElementFactory.getInstance("pause");
+        mStarElement = (StarElement) mGameElementFactory.getInstance("star");
         mSurfaceHolder.unlockCanvasAndPost(canvas);
     }
 
@@ -343,6 +296,11 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
     }
 
     public void fire() {
-        mBulletElements.add(new BulletElement(mPlayerElement.getX()+(mPlayerElement.getWidth()/2), mPlayerElement.getY()+mPlayerElement.getHeight(), 10, 20));
+        BulletElement bulletElement = new BulletElement(mPlayerElement.getX()+(mPlayerElement.getWidth()/2), mPlayerElement.getY()+mPlayerElement.getHeight(), 10, 20);
+        mBulletElements.add(bulletElement);
+    }
+
+    public void drawBackground(Canvas canvas) {
+        mSpaceBackgroundElement.draw(canvas);
     }
 }

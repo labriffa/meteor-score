@@ -32,7 +32,7 @@ public class GameElementFactory {
         CanvasElement canvasElement = null;
 
         if(type.equals("player")) {
-            canvasElement = new PlayerElement(0, 100, 250, 250, ContextCompat.getDrawable(mContext, R.drawable.rocket));
+            canvasElement = new PlayerElement(0, 200, 250, 350, ContextCompat.getDrawable(mContext, R.drawable.rocket));
         } else if(type.equals("star")) {
             canvasElement = new StarElement((int)(Math.random()*mCanvas.getWidth()),mCanvas.getHeight(),50,50,ContextCompat.getDrawable(mContext, R.drawable.coin_spin));
         } else if(type.equals("meteor")) {
@@ -66,22 +66,11 @@ public class GameElementFactory {
     }
 
     private int randomLightColor() {
-        ArrayList<String> colorHex = new ArrayList<>();
+        String r = Integer.toHexString((int)(Math.round(Math.random()* 127) + 127));
+        String g = Integer.toHexString((int)(Math.round(Math.random()* 127) + 127));
+        String b = Integer.toHexString((int)(Math.round(Math.random()* 127) + 127));
 
-        colorHex.add("#1abc9c");
-        colorHex.add("#2ecc71");
-        colorHex.add("#3498db");
-        colorHex.add("#9b59b6");
-        colorHex.add("#16a085");
-        colorHex.add("#27ae60");
-        colorHex.add("#2980b9");
-        colorHex.add("#8e44ad");
-        colorHex.add("#e74c3c");
-        colorHex.add("#f39c12");
-        colorHex.add("#d35400");
-        colorHex.add("#bdc3c7");
-
-        return Color.parseColor(colorHex.get((int)(Math.random()*12)));
+        return Color.parseColor("#" + r + g + b);
         //return Color.rgb((int)(Math.random()*(256 - 150 + 1)), (int)(Math.random()*(256 - 150 + 1)), (int)(Math.random()*(256 - 150 + 1)));
     }
 }
