@@ -2,6 +2,7 @@ package com.developments.briffa.lewis.weightless.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,16 +19,12 @@ import com.developments.briffa.lewis.weightless.R;
 
 import java.util.ArrayList;
 
-public class EncyclopediaActivity extends AppCompatActivity {
+public class EncyclopediaActivity extends AppCompatActivity implements OnItemSelectionChangeListener {
 
     private GridView mGridView;
     private ArrayList<PlanetEntry> mPlanetEntries;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_encyclopedia);
-
+    public EncyclopediaActivity() {
         mPlanetEntries = new ArrayList<>();
         mPlanetEntries.add(new PlanetEntry("Mercury", R.drawable.mercury_planet, "In Roman mythology Mercury is the god of commerce, travel and thievery, the Roman counterpart of the Greek god Hermes, the messenger of the Gods. The planet probably received this name because it moves so quickly across the sky.\n" +
                 "\n" +
@@ -93,59 +90,54 @@ public class EncyclopediaActivity extends AppCompatActivity {
                 "Most of the planets spin on an axis nearly perpendicular to the plane of the ecliptic but Uranus' axis is almost parallel to the ecliptic. At the time of Voyager 2's passage, Uranus' south pole was pointed almost directly at the Sun. This results in the odd fact that Uranus' polar regions receive more energy input from the Sun than do its equatorial regions. Uranus is nevertheless hotter at its equator than at its poles. The mechanism underlying this is unknown.\n" +
                 "\n" +
                 "Actually, there's an ongoing battle over which of Uranus' poles is its north pole! Either its axial inclination is a bit over 90 degrees and its rotation is direct, or it's a bit less than 90 degrees and the rotation is retrograde. The problem is that you need to draw a dividing line *somewhere*, because in a case like Venus there is little dispute that the rotation is indeed retrograde (not a direct rotation with an inclination of nearly 180).", R.drawable.uranus_photo));
+    }
 
-        mGridView = (GridView) findViewById(R.id.gridview_encyclopedia);
-        mGridView.setAdapter(new ImageAdapter(this));
-        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(EncyclopediaActivity.this, "" + position, Toast.LENGTH_LONG);
-            }
-        });
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_encyclopedia);
 
         getSupportActionBar().setTitle("Encyclopedia");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        EncyclopediaDetailsFragment encyclopediaDetailsFragment = (EncyclopediaDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.encyclopedia_details_fragment);
+
+        if(encyclopediaDetailsFragment != null) {
+
+            PlanetEntry planetEntry = mPlanetEntries.get(0);
+
+            encyclopediaDetailsFragment.setTextViewPlanetName(planetEntry.getName());
+            encyclopediaDetailsFragment.setImageViewPlanet(planetEntry.getImage());
+            encyclopediaDetailsFragment.setTextViewPlanetDescription(planetEntry.getDescription());
+        }
+
     }
 
-    public class ImageAdapter extends BaseAdapter {
+    public void onItemSelectionChange(int position) {
 
-        public ImageAdapter(Context context) {
+        EncyclopediaDetailsFragment encyclopediaDetailsFragment = (EncyclopediaDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.encyclopedia_details_fragment);
 
+        if(encyclopediaDetailsFragment != null) {
+
+            PlanetEntry planetEntry = mPlanetEntries.get(position);
+
+            encyclopediaDetailsFragment.setTextViewPlanetName(planetEntry.getName());
+            encyclopediaDetailsFragment.setImageViewPlanet(planetEntry.getImage());
+            encyclopediaDetailsFragment.setTextViewPlanetDescription(planetEntry.getDescription());
+        } else {
+            encyclopediaDetailsFragment = new EncyclopediaDetailsFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt(EncyclopediaDetailsFragment.ENTRY_INDEX, position);
+            encyclopediaDetailsFragment.setArguments(bundle);
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+            fragmentTransaction.replace(R.id.activity_encyclopedia, encyclopediaDetailsFragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
         }
+    }
 
-        @Override
-        public int getCount() {
-            return 8;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            View itemView = getLayoutInflater().inflate(R.layout.item_encyclopedia, null);
-            ImageView imageView = itemView.findViewById(R.id.imageView);
-            TextView textView = itemView.findViewById(R.id.textView);
-            imageView.setImageResource(mPlanetEntries.get(position).getImage());
-            textView.setText(mPlanetEntries.get(position).getName());
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent encyclopediaDetailsIntent = new Intent(EncyclopediaActivity.this, EncyclopediaDetailsActivity.class);
-                    encyclopediaDetailsIntent.putExtra("NAME", mPlanetEntries.get(position).getName());
-                    encyclopediaDetailsIntent.putExtra("ID", mPlanetEntries.get(position).getPhoto());
-                    encyclopediaDetailsIntent.putExtra("DESCRIPTION", mPlanetEntries.get(position).getDescription());
-                    startActivity(encyclopediaDetailsIntent);
-                }
-            });
-            return itemView;
-        }
+    public ArrayList<PlanetEntry> getList() {
+        return mPlanetEntries;
     }
 }

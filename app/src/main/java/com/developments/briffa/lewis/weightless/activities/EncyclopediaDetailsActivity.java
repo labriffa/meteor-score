@@ -8,8 +8,6 @@ import android.widget.TextView;
 
 import com.developments.briffa.lewis.weightless.R;
 
-import org.w3c.dom.Text;
-
 public class EncyclopediaDetailsActivity extends AppCompatActivity {
 
     private TextView mTextViewPlanetName;
@@ -26,7 +24,7 @@ public class EncyclopediaDetailsActivity extends AppCompatActivity {
         int image = intent.getExtras().getInt("ID");
         String description = intent.getExtras().getString("DESCRIPTION");
 
-        mImageViewPlanet = (ImageView) findViewById(R.id.imageView5);
+        mImageViewPlanet = (ImageView) findViewById(R.id.planet_details_image);
         mTextViewPlanetDescription = (TextView) findViewById(R.id.textView5);
 
         mImageViewPlanet.setImageResource(image);

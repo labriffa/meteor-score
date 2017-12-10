@@ -13,11 +13,13 @@ public class MeteorElement extends CanvasElement {
     private Paint mPaint;
     private float width;
     private int meteorType = 0;
+    private boolean hasBeenHit;
 
     public MeteorElement(float x, float y, int width, int height, int color) {
         super(x, y, width, height);
         this.width = width;
-        dy = -15;
+        dy = -8;
+        hasBeenHit = false;
 
         mPaint = new Paint();
         mPaint.setColor(color);
@@ -35,8 +37,20 @@ public class MeteorElement extends CanvasElement {
     }
 
     public void move(Canvas canvas) {
+
         setY(getY() + dy);
         setX(getX() + dx);
-        canvas.drawRect(getX(),getY(),getX()+getWidth(),getY()+75,mPaint);
+
+        if(!hasBeenHit) {
+            canvas.drawRect(getX(),getY(),getX()+getWidth(),getY()+75,mPaint);
+        } else {
+            canvas.drawRect(getX(),getY(),getX()+getWidth()/2,getY()+75,mPaint);
+            canvas.drawRect(getX()+getWidth()/2,getY(),getX()+getWidth()/2+getX()+getWidth()/2,getY()+75,mPaint);
+        }
+    }
+
+    public void setHasBeenHit(boolean hasBeenHit) {
+        this.hasBeenHit = hasBeenHit;
+        dy = dy * -1;
     }
 }

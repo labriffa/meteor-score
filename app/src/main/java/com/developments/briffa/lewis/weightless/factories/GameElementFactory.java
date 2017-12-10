@@ -38,7 +38,7 @@ public class GameElementFactory {
         } else if(type.equals("meteor")) {
             canvasElement = new MeteorElement((int)(Math.random()*mCanvas.getWidth()), mCanvas.getHeight(), (int)(Math.random()*mCanvas.getWidth()/3), 75, randomLightColor());
         } else if(type.equals("pause")) {
-            canvasElement = new PauseElement(mCanvas.getWidth()-125,25,100,200, Color.RED);
+            canvasElement = new PauseElement(mCanvas.getWidth() - 125, 25, 100, 200, Color.RED);
         } else if(type.equals("star-trail")) {
             ArrayList<StarElement> starElements = new ArrayList<>();
 
