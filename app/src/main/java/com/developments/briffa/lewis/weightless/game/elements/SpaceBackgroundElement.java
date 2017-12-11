@@ -43,30 +43,6 @@ public class SpaceBackgroundElement {
         }
     }
 
-    public void setStart(boolean isStart)
-    {
-        this.isStart = isStart;
-    }
-
-//    @Override
-//    public float getX() {
-//        return 0;
-//    }
-//
-//    @Override
-//    public float getY() {
-//        return 0;
-//    }
-//
-//    @Override
-//    public float getWidth() {
-//        return 0;
-//    }
-//
-//    @Override
-//    public float getHeight() {
-//        return 0;
-//    }
     public void setY(float y) {
         this.y = y;
     }

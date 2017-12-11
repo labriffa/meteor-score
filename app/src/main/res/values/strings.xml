@@ -1,6 +1,75 @@
 <resources>
     <string name="app_name">Weightless</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Encyclopedia entries -->
+    <string-array name="encyclopedia_entry_names">
+        <item>Mercury</item>
+        <item>Venus</item>
+        <item>Earth</item>
+        <item>Mars</item>
+        <item>Jupiter</item>
+        <item>Saturn</item>
+        <item>Uranus</item>
+        <item>Neptune</item>
+    </string-array>
+
+    <string-array name="encyclopedia_entry_descriptions">
+        <item>
+            Mercury is the smallest planet in our solar system. Its just a little bigger than Earths moon. It is the closest planet to the sun, but its actually not the hottest. Venus is hotter.\n\n
+            Along with Venus, Earth, and Mars, Mercury is one of the rocky planets. It has a solid surface that is covered with craters. It has a thin atmosphere, and it doesnt have any moons. Mercury likes to keep things simple.
+            This small planet spins around slowly compared to Earth, so one day lasts a long time. Mercury takes 59 Earth days to make one full rotation. A year on Mercury goes by fast. Because its the closest planet to the sun, it doesnt take very long to go all the way around. It completes one revolution around the sun in just 88 Earth days. If you lived on Mercury, youd have a birthday every three months!\n\n
+            A day on Mercury is not like a day here on Earth. For us, the sun rises and sets each and every day. Because Mercury has a slow spin and short year, it takes a long time for the sun to rise and set there. Mercury only has one sunrise every 180 Earth days! Isnt that weird?
+        </item>
+        <item>
+            Even though Venus isnt the closest planet to the sun, it is still the hottest. It has a thick atmosphere full of the greenhouse gas carbon dioxide and clouds made of sulfuric acid. The gas traps heat and keeps Venus toasty warm. In fact, its so hot on Venus, metals like lead would be puddles of melted liquid.\n\n
+            Venus looks like a very active planet. It has mountains and volcanoes. Venus is similar in size to Earth. Earth is just a little bit bigger.
+            Venus is unusual because it spins the opposite direction of Earth and most other planets. And its rotation is very slow. It takes about 243 Earth days to spin around just once. Because its so close to the sun, a year goes by fast. It takes 225 Earth days for Venus to go all the way around the sun. That means that a day on Venus is a little longer than a year on Venus.\n\n
+            Since the day and year lengths are similar, one day on Venus is not like a day on Earth. Here, the sun rises and sets once each day. But on Venus, the sun rises every 117 Earth days. That means the sun rises two times during each year on Venus, even though it is still the same day on Venus! And because Venus rotates backwards, the sun rises in the west and sets in the east.
+            Just like Mercury, Venus doesnt have any moons.
+        </item>
+        <item>
+            Our home planet Earth is a rocky, terrestrial planet. It has a solid and active surface with mountains, valleys, canyons, plains and so much more. Earth is special because it is an ocean planet. Water covers 70% of Earths surface.\n\n
+            Our atmosphere is made mostly of nitrogen and has plenty of oxygen for us to breathe. The atmosphere also protects us from incoming meteoroids, most of which break up in our atmosphere before they can strike the surface as meteorites.
+            Since we live here, you might think we know all there is to know about Earth. Not at all, actually! We have a lot we can learn about our home planet. Right now, there are many satellites orbiting Earth taking pictures and measurements.\n\n This is how we can learn more about weather, oceans, soil, climate change, and many other important topics.
+        </item>
+        <item>
+            Mars is a cold desert world. It is half the size of Earth. Mars is sometimes called the Red Planet. Its red because of rusty iron in the ground.\n\n
+            Like Earth, Mars has seasons, polar ice caps, volcanoes, canyons, and weather. It has a very thin atmosphere made of carbon dioxide, nitrogen, and argon.
+            There are signs of ancient floods on Mars, but now water mostly exists in icy dirt and thin clouds. On some Martian hillsides, there is evidence of liquid salty water in the ground.\n\n
+            Scientists want to know if Mars may have had living things in the past. They also want to know if Mars could support life now or in the future.
+        </item>
+        <item>
+            Jupiter is the biggest planet in our solar system. Its similar to a star, but it never got big enough to start burning.
+            It is covered in swirling cloud stripes. It has big storms like the Great Red Spot, which has been going for hundreds of years.
+            Jupiter is a gas giant and doesnt have a solid surface, but it may have a solid inner core about the size of Earth. Jupiter also has rings, but theyre too faint to see very well.
+        </item>
+        <item>
+            Saturn isnt the only planet to have rings, but it definitely has the most beautiful ones. The rings we see are made of groups of tiny ringlets that surround Saturn.
+            Theyre made of chunks of ice and rock. Like Jupiter, Saturn is mostly a ball of hydrogen and helium.\n\n
+            When Galileo Galilei saw Saturn through a telescope in the 1600s, he wasnt sure what he was seeing.
+            At first he thought he was looking at three planets, or a planet with handles. Now we know those "handles" turned out to be the rings of Saturn.
+        </item>
+        <item>
+            Uranus is made of water, methane, and ammonia fluids above a small rocky center. Its atmosphere is made of hydrogen and helium like Jupiter and Saturn, but it also has methane.The methane makes Uranus blue.\n\n
+            Uranus also has faint rings. The inner rings are narrow and dark. The outer rings are brightly colored and easier to see.
+            Like Venus, Uranus rotates in the opposite direction as most other planets. And unlike any other planet, Uranus rotates on its side.
+        </item>
+        <item>
+            Neptune is dark, cold, and very windy. Its the last of the planets in our solar system. Its more than 30 times as far from the sun as Earth is. Neptune is very similar to Uranus.
+            Its made of a thick soup of water, ammonia, and methane over an Earth-sized solid center.
+            Its atmosphere is made of hydrogen, helium, and methane. The methane gives Neptune the same blue color as Uranus. Neptune has six rings, but theyre very hard to see.
+        </item>
+    </string-array>
+
+    <integer-array name="encyclopedia_entry_images">
+        <item>@drawable/mercury_planet</item>
+        <item>@drawable/venus_planet</item>
+        <item>@drawable/earth_planet</item>
+        <item>@drawable/mars_planet</item>
+        <item>@drawable/jupiter_planet</item>
+        <item>@drawable/saturn_planet</item>
+        <item>@drawable/uranus_planet</item>
+        <item>@drawable/neptune_planet</item>
+    </integer-array>
 </resources>

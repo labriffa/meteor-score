@@ -5,24 +5,23 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 
-import com.developments.briffa.lewis.weightless.activities.HazardElement;
-
-public class MeteorElement extends HazardElement {
+public class SpinningMeteor extends MeteorElement {
 
     private float dy;
     private float dx;
     private Paint mPaint;
     private float width;
+    private int meteorType = 0;
     private Drawable image;
     private int health;
 
-    public MeteorElement(float x, float y, int width, int height, Drawable drawable) {
-        super(x, y, width, height);
-        this.width = width;
+    public SpinningMeteor(float x, float y, int width, int height, Drawable drawable) {
+        super(x, y, width, height, drawable);
+        dx = 6f;
         dy = -8;
         mPaint = new Paint();
         mPaint.setColor(Color.YELLOW);
-        this.image = drawable;
+        image = drawable;
         health = width;
     }
 
@@ -31,6 +30,12 @@ public class MeteorElement extends HazardElement {
         if(!hasBeenHit()) {
             setY(getY() + dy);
             setX(getX() + dx);
+
+            if(getX() <= 0) {
+                dx = 6f;
+            } else if(getX() >= canvas.getWidth() - getWidth()) {
+                dx = -6f;
+            }
 
             Paint paint = new Paint();
             paint.setColor(Color.RED);
@@ -49,5 +54,4 @@ public class MeteorElement extends HazardElement {
     public void damage(int hitPoint) {
         health -= hitPoint;
     }
-
 }

@@ -16,7 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.developments.briffa.lewis.weightless.R;
-import com.developments.briffa.lewis.weightless.models.PlanetEntry;
+import com.developments.briffa.lewis.weightless.models.EncyclopediaEntry;
 
 import java.util.ArrayList;
 
@@ -29,7 +29,7 @@ import java.util.ArrayList;
 public class EncyclopediaFragment extends Fragment {
 
     private GridView mGridView;
-    private ArrayList<PlanetEntry> mPlanetEntries;
+    private ArrayList<EncyclopediaEntry> mPlanetEntries;
 
     private OnFragmentInteractionListener mListener;
 

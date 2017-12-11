@@ -1,5 +1,7 @@
 package com.developments.briffa.lewis.weightless.activities;
 
+import android.content.SharedPreferences;
+import android.graphics.drawable.AnimationDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
@@ -22,12 +24,8 @@ import com.developments.briffa.lewis.weightless.R;
  */
 public class GameActivity extends AppCompatActivity {
 
-    private SensorManager mSensorManager;
-    private Sensor mAccelerometerSensor;
-    private ImageView mImageViewSpaceman;
     private GameSurfaceView mGameSurfaceView;
     private RelativeLayout mRelativeLayout;
-    private MediaPlayer mMediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +39,6 @@ public class GameActivity extends AppCompatActivity {
         mRelativeLayout.addView(mGameSurfaceView);
 
         getSupportActionBar().hide();
-
     }
 
     @Override
@@ -63,7 +60,6 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d("DESTROY", "DESTROYED");
         mGameSurfaceView.setRunning(false);
         mGameSurfaceView.quitHandlerThread();
         mGameSurfaceView.getMediaPlayer().stop();

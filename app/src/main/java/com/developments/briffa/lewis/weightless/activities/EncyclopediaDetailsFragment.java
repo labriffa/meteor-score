@@ -1,6 +1,5 @@
 package com.developments.briffa.lewis.weightless.activities;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.developments.briffa.lewis.weightless.R;
-import com.developments.briffa.lewis.weightless.models.PlanetEntry;
+import com.developments.briffa.lewis.weightless.models.EncyclopediaEntry;
 
 import java.util.ArrayList;
 
@@ -49,14 +48,14 @@ public class EncyclopediaDetailsFragment extends Fragment {
 
         if(bundle != null) {
 
-            ArrayList<PlanetEntry> planetEntries = ((EncyclopediaActivity)getActivity()).getList();
+            ArrayList<EncyclopediaEntry> encyclopediaManager = ((EncyclopediaActivity)getActivity()).getList();
             int planetEntryPosition = bundle.getInt(ENTRY_INDEX);
 
-            PlanetEntry planetEntry = planetEntries.get(planetEntryPosition);
+            EncyclopediaEntry encyclopediaEntry = encyclopediaManager.get(planetEntryPosition);
 
-            mImageViewPlanet.setImageResource(planetEntry.getImage());
-            mTextViewPlanetName.setText(planetEntry.getName());
-            mTextViewPlanetDescription.setText(planetEntry.getDescription());
+            mImageViewPlanet.setImageResource(encyclopediaEntry.getImage());
+            mTextViewPlanetName.setText(encyclopediaEntry.getName());
+            mTextViewPlanetDescription.setText(encyclopediaEntry.getDescription());
         }
 
         return detailsView;

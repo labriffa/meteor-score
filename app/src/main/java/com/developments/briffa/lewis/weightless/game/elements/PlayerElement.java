@@ -44,11 +44,6 @@ public class PlayerElement extends CanvasElement {
         image.draw(canvas);
     }
 
-//    @Override
-//    public float getY() {
-//        return 0;
-//    }
-
     public void setDx(float dx)
     {
         this.dx = dx;

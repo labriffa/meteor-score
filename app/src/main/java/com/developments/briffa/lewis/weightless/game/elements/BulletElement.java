@@ -2,7 +2,9 @@ package com.developments.briffa.lewis.weightless.game.elements;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.Shader;
 
 import com.developments.briffa.lewis.weightless.activities.Collidable;
 import com.developments.briffa.lewis.weightless.activities.ElementObservable;
@@ -24,6 +26,7 @@ public class BulletElement extends CanvasElement implements Collidable {
         Paint paint = new Paint();
         paint.setColor(Color.YELLOW);
         setY(getY()+dy);
+        paint.setShader(new LinearGradient(0, 0, 0, getHeight(), Color.YELLOW, Color.RED, Shader.TileMode.MIRROR));
         canvas.drawRect((int)getX(),(int)getY(),(int)(getX()+getWidth()),(int)(getY()+getHeight()), paint);
     }
 
