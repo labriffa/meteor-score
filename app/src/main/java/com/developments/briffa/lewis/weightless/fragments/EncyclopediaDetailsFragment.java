@@ -1,6 +1,5 @@
-package com.developments.briffa.lewis.weightless.activities;
+package com.developments.briffa.lewis.weightless.fragments;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,15 +11,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.developments.briffa.lewis.weightless.R;
+import com.developments.briffa.lewis.weightless.activities.EncyclopediaActivity;
 import com.developments.briffa.lewis.weightless.models.EncyclopediaEntry;
 
 import java.util.ArrayList;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link EncyclopediaDetailsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
+ * Fragment: Responsible for displaying the information for a given encyclopedia entry.
+ *
+ * @author lewisbriffa
+ * @version V1.3
  */
 public class EncyclopediaDetailsFragment extends Fragment {
 
@@ -28,7 +28,7 @@ public class EncyclopediaDetailsFragment extends Fragment {
     private ImageView mImageViewPlanet;
     private TextView mTextViewPlanetDescription;
 
-    final static String ENTRY_INDEX = "position";
+    public final static String ENTRY_INDEX = "position";
 
     public EncyclopediaDetailsFragment() {
         // Required empty public constructor
@@ -46,6 +46,7 @@ public class EncyclopediaDetailsFragment extends Fragment {
 
         Bundle bundle = getArguments();
 
+        // were currently in mobile mode
         if(bundle != null) {
 
             ArrayList<EncyclopediaEntry> encyclopediaManager = ((EncyclopediaActivity)getActivity()).getList();
@@ -70,32 +71,34 @@ public class EncyclopediaDetailsFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        // change the action bar title to reflect the currently selected encyclopedia entry
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(mTextViewPlanetName.getText());
     }
 
     /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
+     * Sets the image view resource for the encyclopedia entry
+     *
+     * @param id
      */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
-
     public void setImageViewPlanet(int id) {
         mImageViewPlanet.setImageResource(id);
     }
 
+    /**
+     * Sets the name for the encyclopedia entry
+     *
+     * @param name
+     */
     public void setTextViewPlanetName(String name) {
         mTextViewPlanetName.setText(name);
     }
 
+    /**
+     * Sets the description for the encyclopedia entry
+     *
+     * @param description
+     */
     public void setTextViewPlanetDescription(String description) {
         mTextViewPlanetDescription.setText(description);
     }

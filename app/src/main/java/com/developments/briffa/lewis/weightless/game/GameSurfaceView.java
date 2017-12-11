@@ -1,4 +1,4 @@
-package com.developments.briffa.lewis.weightless.game.elements;
+package com.developments.briffa.lewis.weightless.game;
 
 import android.content.Context;
 import android.content.Intent;
@@ -23,10 +23,18 @@ import android.view.SurfaceView;
 import android.view.View;
 
 import com.developments.briffa.lewis.weightless.R;
-import com.developments.briffa.lewis.weightless.activities.Collidable;
-import com.developments.briffa.lewis.weightless.activities.CollisionDetector;
+import com.developments.briffa.lewis.weightless.interfaces.Collidable;
+import com.developments.briffa.lewis.weightless.game.utilities.CollisionDetector;
 import com.developments.briffa.lewis.weightless.activities.GameOverActivity;
+import com.developments.briffa.lewis.weightless.game.elements.MeteorElement;
+import com.developments.briffa.lewis.weightless.game.elements.PauseElement;
+import com.developments.briffa.lewis.weightless.game.elements.PlayerElement;
+import com.developments.briffa.lewis.weightless.game.elements.SpaceBackgroundElement;
+import com.developments.briffa.lewis.weightless.game.elements.SpinningMeteor;
+import com.developments.briffa.lewis.weightless.game.elements.StarElement;
+import com.developments.briffa.lewis.weightless.game.elements.StarTrailElement;
 import com.developments.briffa.lewis.weightless.factories.GameElementFactory;
+import com.developments.briffa.lewis.weightless.game.elements.BulletElement;
 
 import java.util.ArrayList;
 import java.util.ListIterator;
@@ -47,7 +55,6 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
     private SensorManager mSensorManager;
     private Sensor mSensor;
     private Vibrator mVibrator;
-    private float moveX;
     private Handler mHandler;
     private HandlerThread mHandlerThread;
     private MeteorElement mMeteorElement;
@@ -134,7 +141,8 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
                                 mSpinningMeteor = (SpinningMeteor) mGameElementFactory.getInstance("spinning-meteor");
                             }
 
-                            if(CollisionDetector.hasCollided(mMeteorElement, mPlayerElement) || CollisionDetector.hasCollided(mSpinningMeteor, mPlayerElement)) {
+                            if(CollisionDetector.hasCollided(mMeteorElement, mPlayerElement)
+                                    || CollisionDetector.hasCollided(mSpinningMeteor, mPlayerElement)) {
                                 mVibrator.vibrate(500);
                                 gameOver();
                             }
@@ -149,7 +157,6 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
                             if(CollisionDetector.hasCollided(mStarElement, mPlayerElement)) {
                                 starPickup(canvas, mStarElement);
                             }
-
 
                             mMeteorElement.move(canvas);
                             mSpinningMeteor.move(canvas);
@@ -309,7 +316,7 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
     public void surfaceCreated(SurfaceHolder holder) {
         Canvas canvas = mSurfaceHolder.lockCanvas();
         mGameElementFactory = new GameElementFactory(this.getContext(), canvas);
-        mSpaceBackgroundElement = new SpaceBackgroundElement(spacebg, 0, canvas.getHeight());
+        mSpaceBackgroundElement = new SpaceBackgroundElement(spacebg, 0, 0);
         mSpaceBackgroundElement.draw(canvas);
         mPlayerElement = (PlayerElement) mGameElementFactory.getInstance("player");
         mMeteorElement = (MeteorElement) mGameElementFactory.getInstance("meteor");

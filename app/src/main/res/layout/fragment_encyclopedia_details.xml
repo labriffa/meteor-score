@@ -3,7 +3,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context="com.developments.briffa.lewis.weightless.activities.EncyclopediaDetailsFragment"
+                tools:context=".fragments.EncyclopediaDetailsFragment"
                 android:background="@color/colorWhite">
 
     <ScrollView

@@ -1,17 +1,10 @@
 package com.developments.briffa.lewis.weightless.activities;
 
-import android.content.SharedPreferences;
-import android.graphics.drawable.AnimationDrawable;
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
-import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.developments.briffa.lewis.weightless.game.elements.GameSurfaceView;
+import com.developments.briffa.lewis.weightless.game.GameSurfaceView;
 import com.developments.briffa.lewis.weightless.R;
 
 

@@ -27,7 +27,7 @@
     <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.developments.briffa.lewis.weightless.activities.EncyclopediaFragment"
+        android:name="com.developments.briffa.lewis.weightless.fragments.EncyclopediaFragment"
         android:id="@+id/encyclopedia_fragment"
         android:layout_weight="2"
         tools:layout_editor_absoluteY="8dp"

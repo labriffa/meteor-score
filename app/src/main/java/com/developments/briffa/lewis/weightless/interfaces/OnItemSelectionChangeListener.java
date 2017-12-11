@@ -1,4 +1,4 @@
-package com.developments.briffa.lewis.weightless.activities;
+package com.developments.briffa.lewis.weightless.interfaces;
 
 public interface OnItemSelectionChangeListener {
     void onItemSelectionChange(int position);

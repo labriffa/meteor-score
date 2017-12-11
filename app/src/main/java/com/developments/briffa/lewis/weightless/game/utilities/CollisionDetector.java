@@ -1,4 +1,4 @@
-package com.developments.briffa.lewis.weightless.activities;
+package com.developments.briffa.lewis.weightless.game.utilities;
 
 import com.developments.briffa.lewis.weightless.game.elements.CanvasElement;
 

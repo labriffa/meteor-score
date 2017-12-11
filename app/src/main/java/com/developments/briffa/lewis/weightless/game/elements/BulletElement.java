@@ -6,8 +6,8 @@ import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Shader;
 
-import com.developments.briffa.lewis.weightless.activities.Collidable;
-import com.developments.briffa.lewis.weightless.activities.ElementObservable;
+import com.developments.briffa.lewis.weightless.interfaces.Collidable;
+import com.developments.briffa.lewis.weightless.interfaces.ElementObservable;
 
 import java.util.ArrayList;
 

@@ -5,8 +5,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 
-import com.developments.briffa.lewis.weightless.activities.HazardElement;
-
 public class MeteorElement extends HazardElement {
 
     private float dy;

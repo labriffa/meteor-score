@@ -7,43 +7,34 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 
 public class SpaceBackgroundElement {
-    private Paint mPaintWhite;
-    private Paint mPaintBlack;
-    private boolean isStart;
-    private Drawable image1;
-    private Drawable image2;
+    private Paint mPaintStars;
+    private Paint mPaintBackground;
     private float y;
     private float x;
-    private float dy;
 
     public SpaceBackgroundElement(Drawable image, float x, float y) {
-        mPaintBlack = new Paint();
-        mPaintBlack.setColor(Color.parseColor("#252525"));
-        isStart = true;
+        mPaintBackground = new Paint();
+        mPaintBackground.setColor(Color.parseColor("#252525"));
+
         this.x = x;
         this.y = y;
-        this.dy = -10;
 
-        this.image1 = image;
-        this.image2 = image;
-
-
-        mPaintWhite = new Paint();
-        mPaintWhite.setColor(Color.WHITE);
+        mPaintStars = new Paint();
+        mPaintStars.setColor(Color.WHITE);
     }
 
     public void draw(Canvas canvas)
     {
-        if(isStart) {
-            canvas.drawRect(0,0,canvas.getWidth(), canvas.getHeight()*2, mPaintBlack);
-            for(int i = 0; i < 100; i++)
-            {
-                canvas.drawCircle(5*(float)(Math.random() * canvas.getWidth()), 5*(float)(Math.random() * canvas.getHeight()*2), (float)Math.random() * 2 + 2, mPaintWhite);
-            }
-        }
-    }
+        // create background
+        canvas.drawRect(x,y,canvas.getWidth(), canvas.getHeight()*2, mPaintBackground);
 
-    public void setY(float y) {
-        this.y = y;
+        // create stars
+        for(int i = 0; i < 100; i++) {
+            canvas.drawCircle(
+                    5*(float)(Math.random() * canvas.getWidth()),
+                    5*(float)(Math.random() * canvas.getHeight()*2),
+                    (float)Math.random() * 2 + 2,
+                    mPaintStars);
+        }
     }
 }

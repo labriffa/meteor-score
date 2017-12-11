@@ -1,8 +1,7 @@
-package com.developments.briffa.lewis.weightless.activities;
+package com.developments.briffa.lewis.weightless.game.elements;
 
-import android.util.Log;
-
-import com.developments.briffa.lewis.weightless.game.elements.CanvasElement;
+import com.developments.briffa.lewis.weightless.interfaces.Collidable;
+import com.developments.briffa.lewis.weightless.interfaces.ElementObservable;
 
 import java.util.ArrayList;
 

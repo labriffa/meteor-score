@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import com.developments.briffa.lewis.weightless.R;
 import com.developments.briffa.lewis.weightless.game.elements.CanvasElement;
