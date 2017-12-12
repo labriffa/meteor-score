@@ -34,10 +34,11 @@ public class EncyclopediaActivity extends AppCompatActivity implements OnItemSel
 
         setContentView(R.layout.activity_encyclopedia);
 
-        getSupportActionBar().setTitle("Encyclopedia");
+        getSupportActionBar().setTitle(R.string.encyclopedia_title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        EncyclopediaDetailsFragment encyclopediaDetailsFragment = (EncyclopediaDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.encyclopedia_details_fragment);
+        EncyclopediaDetailsFragment encyclopediaDetailsFragment =
+                (EncyclopediaDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.encyclopedia_details_fragment);
 
         // if were in dual fragment screen mode, initial the description fragment
         // as the first entry in the encyclopedia
@@ -54,7 +55,8 @@ public class EncyclopediaActivity extends AppCompatActivity implements OnItemSel
 
     public void onItemSelectionChange(int position) {
 
-        EncyclopediaDetailsFragment encyclopediaDetailsFragment = (EncyclopediaDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.encyclopedia_details_fragment);
+        EncyclopediaDetailsFragment encyclopediaDetailsFragment =
+                (EncyclopediaDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.encyclopedia_details_fragment);
 
         // check if were in dual screen fragment mode
         if(encyclopediaDetailsFragment != null) {

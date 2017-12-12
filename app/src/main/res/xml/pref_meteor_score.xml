@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:key="@string/pref_user_coins_key"
+        android:title="Coins"
+        android:summary="4">
+    </Preference>
+
+    <CheckBoxPreference
+        android:key="@string/pref_user_show_space"
+        android:defaultValue="@string/pref_user_show_space_default"
+        android:summaryOn="Space Theme"
+        android:summaryOff="Sky Background"
+        android:title="Space Background">
+    </CheckBoxPreference>
+
+    <CheckBoxPreference
+        android:key="@string/pref_user_play_sound"
+        android:defaultValue="@string/pref_user_play_sound_default"
+        android:summaryOn="Play Sound"
+        android:summaryOff="Dont Play Sound"
+        android:title="Sound">
+    </CheckBoxPreference>
+</PreferenceScreen>

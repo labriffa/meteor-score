@@ -5,18 +5,21 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 
+import com.developments.briffa.lewis.weightless.interfaces.Movable;
+
 /**
  * Represents the main game player object
  *
  * @author lewisbriffa
  * created on 11/11/2017
  */
-public class PlayerElement extends CanvasElement {
+public class PlayerElement extends CanvasElement implements Movable {
 
     private float dx;
     private float dy;
     private Drawable image;
     private Paint mPaint;
+    private int milesPerHour;
 
     public PlayerElement(float x, float y, int width, int height, Drawable image)
     {
@@ -27,6 +30,8 @@ public class PlayerElement extends CanvasElement {
         mPaint = new Paint();
         mPaint.setColor(Color.RED);
         mPaint.setTextSize(100);
+
+        milesPerHour = 5;
     }
 
     public void move(Canvas canvas)
@@ -41,6 +46,13 @@ public class PlayerElement extends CanvasElement {
         image.setBounds((int) getX(), (int) getY(), (int) (getX() + getWidth()), (int) (getY() + getHeight()));
         image.draw(canvas);
     }
+
+    @Override
+    public boolean hasPassed() {
+        return false;
+    }
+
+    public int getSpeed() { return milesPerHour; }
 
     public void setDx(float dx)
     {

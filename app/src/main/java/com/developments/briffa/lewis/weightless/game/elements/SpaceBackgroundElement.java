@@ -12,9 +12,14 @@ public class SpaceBackgroundElement {
     private float y;
     private float x;
 
-    public SpaceBackgroundElement(Drawable image, float x, float y) {
+    public SpaceBackgroundElement(float x, float y, boolean isSpace) {
         mPaintBackground = new Paint();
-        mPaintBackground.setColor(Color.parseColor("#252525"));
+
+        if(isSpace) {
+            mPaintBackground.setColor(Color.parseColor("#252525"));
+        } else {
+            mPaintBackground.setColor(Color.parseColor("#87CEEB"));
+        }
 
         this.x = x;
         this.y = y;

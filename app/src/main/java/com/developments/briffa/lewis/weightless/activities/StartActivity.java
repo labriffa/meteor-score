@@ -19,6 +19,7 @@ public class StartActivity extends AppCompatActivity {
 
     private ImageButton mButtonStart;
     private ImageButton mButtonEncyclopedia;
+    private ImageButton mButtonSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,15 @@ public class StartActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent encyclopediaIntent = new Intent(StartActivity.this, EncyclopediaActivity.class);
                 startActivity(encyclopediaIntent);
+            }
+        });
+
+        mButtonSettings = (ImageButton) findViewById(R.id.button_settings);
+        mButtonSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent settingsIntent = new Intent(StartActivity.this, SettingsActivity.class);
+                startActivity(settingsIntent);
             }
         });
 

@@ -1,11 +1,15 @@
-package com.developments.briffa.lewis.weightless.game.elements;
+package com.developments.briffa.lewis.weightless.game.elements.hazards;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 
-public class MeteorElement extends HazardElement {
+import com.developments.briffa.lewis.weightless.factories.GameElementFactory;
+import com.developments.briffa.lewis.weightless.game.elements.CanvasElement;
+import com.developments.briffa.lewis.weightless.game.elements.hazards.HazardElement;
+
+public class StandardMeteor extends HazardElement {
 
     private float dy;
     private float dx;
@@ -14,7 +18,7 @@ public class MeteorElement extends HazardElement {
     private Drawable image;
     private int health;
 
-    public MeteorElement(float x, float y, int width, int height, Drawable drawable) {
+    public StandardMeteor(float x, float y, int width, int height, Drawable drawable) {
         super(x, y, width, height);
         this.width = width;
         dy = -8;
@@ -40,6 +44,11 @@ public class MeteorElement extends HazardElement {
         }
     }
 
+    @Override
+    public boolean hasPassed() {
+        return getY() <= -getWidth();
+    }
+
     public int getHealth() {
         return health;
     }
@@ -48,4 +57,8 @@ public class MeteorElement extends HazardElement {
         health -= hitPoint;
     }
 
+    @Override
+    public CanvasElement recreate(GameElementFactory gameElementFactory) {
+        return gameElementFactory.getInstance("meteor");
+    }
 }

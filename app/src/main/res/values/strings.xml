@@ -1,6 +1,16 @@
 <resources>
     <string name="app_name">Weightless</string>
 
+    <string name="encyclopedia_title">Encyclopedia</string>
+
+    <!-- Shared Preferences Keys -->
+    <string name="pref_user_coins_key" translatable="false">user_coins</string>
+    <string name="pref_user_show_space" translatable="false">user_show_space</string>
+    <string name="pref_user_play_sound" translatable="false">user_play_sound</string>
+
+    <!-- Shared Preferences Defaults -->
+    <string name="pref_user_show_space_default" translatable="false">true</string>
+    <string name="pref_user_play_sound_default" translatable="false">true</string>
 
     <!-- Encyclopedia entries -->
     <string-array name="encyclopedia_entry_names">
@@ -72,4 +82,7 @@
         <item>@drawable/uranus_planet</item>
         <item>@drawable/neptune_planet</item>
     </integer-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

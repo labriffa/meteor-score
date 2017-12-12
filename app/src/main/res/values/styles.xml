@@ -6,6 +6,7 @@
         <item name="colorPrimary">#21404F</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="preferenceTheme">@style/SettingsTheme</item>
     </style>
 
     <style name="Theme.AppCompat.Light.NoActionBar.FullScreen" parent="@style/AppTheme">
@@ -13,6 +14,18 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="SettingsTheme" parent="@android:style/Theme.Black.NoTitleBar">
+        <item name="android:activatedBackgroundIndicator">@color/colorGrey</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:windowBackground">@color/colorWhite</item>
+        <item name="android:listViewStyle">@style/SettingsListView</item>
+    </style>
+
+    <style name="SettingsListView" parent="@android:style/Widget.ListView">
+        <item name="android:cacheColorHint">#000000</item>
+        <item name="android:textColor">#000000</item>
     </style>
 
 </resources>

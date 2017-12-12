@@ -16,6 +16,7 @@ import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -23,21 +24,19 @@ import android.view.SurfaceView;
 import android.view.View;
 
 import com.developments.briffa.lewis.weightless.R;
-import com.developments.briffa.lewis.weightless.interfaces.Collidable;
+import com.developments.briffa.lewis.weightless.game.elements.hazards.HazardElement;
 import com.developments.briffa.lewis.weightless.game.utilities.CollisionDetector;
 import com.developments.briffa.lewis.weightless.activities.GameOverActivity;
-import com.developments.briffa.lewis.weightless.game.elements.MeteorElement;
+import com.developments.briffa.lewis.weightless.game.elements.hazards.StandardMeteor;
 import com.developments.briffa.lewis.weightless.game.elements.PauseElement;
 import com.developments.briffa.lewis.weightless.game.elements.PlayerElement;
 import com.developments.briffa.lewis.weightless.game.elements.SpaceBackgroundElement;
-import com.developments.briffa.lewis.weightless.game.elements.SpinningMeteor;
-import com.developments.briffa.lewis.weightless.game.elements.StarElement;
-import com.developments.briffa.lewis.weightless.game.elements.StarTrailElement;
+import com.developments.briffa.lewis.weightless.game.elements.hazards.SpinningMeteor;
+import com.developments.briffa.lewis.weightless.game.elements.collectibles.StarElement;
 import com.developments.briffa.lewis.weightless.factories.GameElementFactory;
-import com.developments.briffa.lewis.weightless.game.elements.BulletElement;
+import com.developments.briffa.lewis.weightless.game.elements.ammo.BulletElement;
 
 import java.util.ArrayList;
-import java.util.ListIterator;
 
 /**
  * Represents a game type surface view object responsible
@@ -50,29 +49,24 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
 
     private SurfaceHolder mSurfaceHolder;
     private boolean isRunning = true;
-    private Paint mPaint;
     private PlayerElement mPlayerElement;
     private SensorManager mSensorManager;
     private Sensor mSensor;
     private Vibrator mVibrator;
     private Handler mHandler;
     private HandlerThread mHandlerThread;
-    private MeteorElement mMeteorElement;
-    private SpinningMeteor mSpinningMeteor;
-    private Drawable spacebg;
     private SpaceBackgroundElement mSpaceBackgroundElement;
     private PauseElement mPauseElement;
-    private StarElement mStarElement;
-    private int score;
     private MediaPlayer mMediaPlayer;
     private MediaPlayer mCoinMediaPlayer;
     private GameElementFactory mGameElementFactory;
-    private StarTrailElement mStarTrailElement;
-    private float x = 0;
-    private float y = 0;
-    private ArrayList<BulletElement> mBulletElements;
-    private CollisionDetector mCollisionDetector;
-    private ArrayList<Collidable> collidables = new ArrayList<Collidable>();
+    private int distanceTravelled = 0;
+
+    private ArrayList<BulletElement> mBullets;
+    private ArrayList<HazardElement> mHazards;
+    private ArrayList<StarElement> mCollectables;
+
+    public static final String DISTANCE_TRAVELLED_KEY = "Travelled Distance";
 
     public GameSurfaceView(final Context context) {
         super(context);
@@ -89,11 +83,10 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
 
         mCoinMediaPlayer = MediaPlayer.create(context, R.raw.coin_pickup);
 
-        mBulletElements = new ArrayList<>();
-
-        score = 0;
-
-        spacebg = ContextCompat.getDrawable(context, R.drawable.space_bg);
+        // initialize game objects
+        mBullets = new ArrayList<>();
+        mHazards = new ArrayList<>();
+        mCollectables = new ArrayList<>();
 
         mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -115,87 +108,72 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
                             clearScreen(canvas);
 
                             drawBackground(canvas);
+
                             drawHud(canvas);
 
-                            if(mStarTrailElement == null) {
-                                mStarTrailElement = (StarTrailElement) mGameElementFactory.getInstance("star-trail");
-                            }
+                            // go through collectibles checking to see if the player
+                            // has collided with any of them
+                            for(int i = 0; i < mCollectables.size(); i++) {
+                                StarElement collectable = mCollectables.get(i);
+                                collectable.move(canvas);
+                                boolean hasCollided = CollisionDetector.hasCollided(collectable, mPlayerElement);
 
-                            if(mStarTrailElement.getY() <= - 1000) {
-                                mStarTrailElement = (StarTrailElement) mGameElementFactory.getInstance("star-trail");
-                            } else {
-                                mStarTrailElement.draw(canvas);
-                            }
+                                if(hasCollided || collectable.hasPassed()) {
+                                    if(hasCollided) {
+                                        starPickup(canvas, collectable);
+                                    }
 
-                            if(mStarElement.getY() <= -1000) {
-                                mStarElement = (StarElement) mGameElementFactory.getInstance("star");
-                            } else {
-                                mStarElement.move(canvas);
-                            }
-
-                            if(mMeteorElement.getY() <= -mMeteorElement.getWidth()) {
-                                mMeteorElement = (MeteorElement) mGameElementFactory.getInstance("meteor");
-                            }
-
-                            if(mSpinningMeteor.getY() <= -mSpinningMeteor.getWidth()) {
-                                mSpinningMeteor = (SpinningMeteor) mGameElementFactory.getInstance("spinning-meteor");
-                            }
-
-                            if(CollisionDetector.hasCollided(mMeteorElement, mPlayerElement)
-                                    || CollisionDetector.hasCollided(mSpinningMeteor, mPlayerElement)) {
-                                mVibrator.vibrate(500);
-                                gameOver();
-                            }
-
-                            ArrayList<StarElement> starElements = mStarTrailElement.getStarElements();
-                            for(StarElement starElement : starElements) {
-                                if(CollisionDetector.hasCollided(starElement, mPlayerElement)) {
-                                    starPickup(canvas, starElement);
+                                    mCollectables.remove(i);
+                                    mCollectables.add((StarElement) collectable.recreate(mGameElementFactory));
                                 }
                             }
 
-                            if(CollisionDetector.hasCollided(mStarElement, mPlayerElement)) {
-                                starPickup(canvas, mStarElement);
-                            }
+                            // go hazards checking to see if the player collided with
+                            // any of them
+                            for(int i = 0; i < mHazards.size(); i++) {
+                                HazardElement hazardElement = mHazards.get(i);
 
-                            mMeteorElement.move(canvas);
-                            mSpinningMeteor.move(canvas);
-                            mStarElement.move(canvas);
+                                hazardElement.move(canvas);
 
-                            ListIterator<BulletElement> bulletElementListIterator = mBulletElements.listIterator();
+                                if(mHazards.get(i) != null) {
 
-                            while(bulletElementListIterator.hasNext()) {
+                                    // go through bullets checking to see if any of them collided
+                                    // with the current meteor
+                                    for(int j = 0; j < mBullets.size(); j++) {
+                                        BulletElement bulletElement = mBullets.get(j);
+                                        bulletElement.move(canvas);
 
-                                BulletElement bulletElement = bulletElementListIterator.next();
+                                        boolean hasCollided = CollisionDetector.hasCollided(hazardElement, bulletElement);
 
-                                if(CollisionDetector.hasCollided(mMeteorElement, bulletElement)) {
+                                        if(hasCollided) {
+                                            hazardElement.damage(30);
+                                        }
 
-                                    mMeteorElement.damage(30);
+                                        if(bulletElement.getY()+bulletElement.getHeight() >= canvas.getHeight() || hasCollided) {
+                                            mBullets.remove(j);
+                                        }
 
-                                    if (mMeteorElement.getHealth() <= 0) {
-                                        mMeteorElement = (MeteorElement) mGameElementFactory.getInstance("meteor");
-                                        mVibrator.vibrate(200);
+                                        // if the hazard has been destroyed, we no longer need to check for other collisions
+                                        if(hazardElement.getHealth() <= 0) {
+                                            mVibrator.vibrate(200);
+                                            break;
+                                        }
                                     }
+                                }
 
-                                    bulletElementListIterator.remove();
+                                if(hazardElement.getHealth() <= 0 || hazardElement.hasPassed()) {
+                                    mHazards.remove(i);
+                                    mHazards.add((HazardElement) hazardElement.recreate(mGameElementFactory));
+                                }
 
-                                } else if(CollisionDetector.hasCollided(mSpinningMeteor, bulletElement)) {
-
-                                    mSpinningMeteor.damage(20);
-
-                                    if(mSpinningMeteor.getHealth() <= 0) {
-                                        mSpinningMeteor = (SpinningMeteor) mGameElementFactory.getInstance("spinning-meteor");
-                                        mVibrator.vibrate(200);
-                                    }
-
-                                    bulletElementListIterator.remove();
-
-                                } else {
-                                    bulletElement.move(canvas);
+                                if(CollisionDetector.hasCollided(hazardElement, mPlayerElement)) {
+                                    gameOver();
+                                    break;
                                 }
                             }
 
                             mPlayerElement.move(canvas);
+                            distanceTravelled += mPlayerElement.getSpeed();
                             mSurfaceHolder.unlockCanvasAndPost(canvas);
 
                         }
@@ -260,11 +238,11 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
         textPaint.setTextSize(60);
         textPaint.setColor(Color.WHITE);
 
-        SharedPreferences userStats = getContext().getSharedPreferences("userStats", getContext().MODE_PRIVATE);
-        int userCoins = userStats.getInt("COINS", -1);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        int userCoins = sharedPreferences.getInt(getResources().getString(R.string.pref_user_coins_key), -1);
 
         if(-1 == userCoins) {
-            userStats.edit().putInt("COINS", 0).commit();
+            sharedPreferences.edit().putInt(getResources().getString(R.string.pref_user_coins_key), 0).apply();
             userCoins = 0;
         }
 
@@ -272,18 +250,21 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
     }
 
     private void gameOver() {
+        mVibrator.vibrate(500);
         Intent gameOverIntent = new Intent(getContext(), GameOverActivity.class);
+        gameOverIntent.putExtra(DISTANCE_TRAVELLED_KEY, distanceTravelled);
         getContext().startActivity(gameOverIntent);
     }
 
     private void starPickup(Canvas canvas, StarElement starElement) {
-        score += 1;
-        //mStarElement = (StarElement) mGameElementFactory.getInstance("star");
         starElement.setY(canvas.getHeight()*2);
-        mCoinMediaPlayer.start();
-        SharedPreferences userStats = getContext().getSharedPreferences("userStats", getContext().MODE_PRIVATE);
-        int userCoins = userStats.getInt("COINS", -1) + 1;
-        userStats.edit().putInt("COINS", userCoins).commit();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        boolean playSound = sharedPreferences.getBoolean(getResources().getString(R.string.pref_user_play_sound), true);
+        if(playSound) {
+            mCoinMediaPlayer.start();
+        }
+        int userCoins = sharedPreferences.getInt(getResources().getString(R.string.pref_user_coins_key), -1) + 1;
+        sharedPreferences.edit().putInt(getResources().getString(R.string.pref_user_coins_key), userCoins).apply();
     }
 
     private void clearScreen(Canvas canvas) {
@@ -293,36 +274,57 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
     private void pause() {
         isRunning = false;
         Canvas canvas = mSurfaceHolder.lockCanvas();
+
         Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.play_btn);
         drawable.setBounds(canvas.getWidth()-125, 25, canvas.getWidth()-25, 125);
         drawable.draw(canvas);
-        mMediaPlayer.pause();
-        int currentMusicPos = mMediaPlayer.getCurrentPosition();
-        mMediaPlayer.seekTo(currentMusicPos);
+
+        if(mMediaPlayer.isPlaying()) {
+            mMediaPlayer.pause();
+            int currentMusicPos = mMediaPlayer.getCurrentPosition();
+            mMediaPlayer.seekTo(currentMusicPos);
+        }
+
         mSurfaceHolder.unlockCanvasAndPost(canvas);
     }
 
     private void unpause() {
         isRunning = true;
-        mMediaPlayer.start();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        boolean playSound = sharedPreferences.getBoolean(getResources().getString(R.string.pref_user_play_sound), true);
+        if(playSound) {
+            mMediaPlayer.start();
+        }
     }
 
     private void initializeBackgroundMusic() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        boolean playSound = sharedPreferences.getBoolean(getResources().getString(R.string.pref_user_play_sound), true);
+
         mMediaPlayer = MediaPlayer.create(getContext(), R.raw.rainbow);
-        mMediaPlayer.start();
+
+        if(playSound) {
+            mMediaPlayer.start();
+        }
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         Canvas canvas = mSurfaceHolder.lockCanvas();
+
         mGameElementFactory = new GameElementFactory(this.getContext(), canvas);
-        mSpaceBackgroundElement = new SpaceBackgroundElement(spacebg, 0, 0);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        boolean isSpaceBackground = sharedPreferences.getBoolean(getResources().getString(R.string.pref_user_show_space), true);
+        mSpaceBackgroundElement = new SpaceBackgroundElement(0, 0, isSpaceBackground);
         mSpaceBackgroundElement.draw(canvas);
         mPlayerElement = (PlayerElement) mGameElementFactory.getInstance("player");
-        mMeteorElement = (MeteorElement) mGameElementFactory.getInstance("meteor");
-        mSpinningMeteor = (SpinningMeteor) mGameElementFactory.getInstance("spinning-meteor");
         mPauseElement = (PauseElement) mGameElementFactory.getInstance("pause");
-        mStarElement = (StarElement) mGameElementFactory.getInstance("star");
+
+        mCollectables.add((StarElement) mGameElementFactory.getInstance("star"));
+
+        mHazards.add((SpinningMeteor) mGameElementFactory.getInstance("spinning-meteor"));
+        mHazards.add((StandardMeteor) mGameElementFactory.getInstance("meteor"));
+
         mSurfaceHolder.unlockCanvasAndPost(canvas);
     }
 
@@ -338,7 +340,7 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
 
     public void fire() {
         BulletElement bulletElement = new BulletElement(mPlayerElement.getX()+(mPlayerElement.getWidth()/2)-5, mPlayerElement.getY()+mPlayerElement.getHeight(), 10, 20);
-        mBulletElements.add(bulletElement);
+        mBullets.add(bulletElement);
     }
 
     public void drawBackground(Canvas canvas) {

@@ -1,22 +1,24 @@
-package com.developments.briffa.lewis.weightless.game.elements;
+package com.developments.briffa.lewis.weightless.game.elements.hazards;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 
-public class SpinningMeteor extends MeteorElement {
+import com.developments.briffa.lewis.weightless.factories.GameElementFactory;
+import com.developments.briffa.lewis.weightless.game.elements.CanvasElement;
+import com.developments.briffa.lewis.weightless.game.elements.hazards.HazardElement;
+
+public class SpinningMeteor extends HazardElement {
 
     private float dy;
     private float dx;
     private Paint mPaint;
-    private float width;
-    private int meteorType = 0;
     private Drawable image;
     private int health;
 
     public SpinningMeteor(float x, float y, int width, int height, Drawable drawable) {
-        super(x, y, width, height, drawable);
+        super(x, y, width, height);
         dx = 6f;
         dy = -8;
         mPaint = new Paint();
@@ -47,8 +49,17 @@ public class SpinningMeteor extends MeteorElement {
         }
     }
 
+    public boolean hasPassed() {
+        return getY() <= -getWidth();
+    }
+
     public int getHealth() {
         return health;
+    }
+
+    @Override
+    public CanvasElement recreate(GameElementFactory gameElementFactory) {
+        return gameElementFactory.getInstance("spinning-meteor");
     }
 
     public void damage(int hitPoint) {
