@@ -22,6 +22,7 @@ public class EncyclopediaManager {
     public EncyclopediaManager(Context context) {
         mEncyclopediaEntries = new ArrayList<>();
 
+        // get encyclopedia entry information from the strings xml file
         String[] encyclopediaEntryNames =        context.getResources().getStringArray(R.array.encyclopedia_entry_names);
         String[] encyclopediaEntryDescriptions = context.getResources().getStringArray(R.array.encyclopedia_entry_descriptions);
         TypedArray encyclopediaEntryImages =     context.getResources().obtainTypedArray(R.array.encyclopedia_entry_images);
@@ -37,10 +38,6 @@ public class EncyclopediaManager {
 
             mEncyclopediaEntries.add(new EncyclopediaEntry(name, image, description, 0));
         }
-    }
-
-    public EncyclopediaEntry getEntry(int id) {
-        return mEncyclopediaEntries.get(id);
     }
 
     public ArrayList<EncyclopediaEntry> getList() {

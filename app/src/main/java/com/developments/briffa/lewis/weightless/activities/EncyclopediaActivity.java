@@ -53,6 +53,13 @@ public class EncyclopediaActivity extends AppCompatActivity implements OnItemSel
 
     }
 
+    /**
+     * Handles the selection of an item in the encyclopedia's grid view
+     * updates the details fragment based on whether or not the device
+     * is a mobile or a larger device e.g. tablet
+     *
+     * @param position
+     */
     public void onItemSelectionChange(int position) {
 
         EncyclopediaDetailsFragment encyclopediaDetailsFragment =

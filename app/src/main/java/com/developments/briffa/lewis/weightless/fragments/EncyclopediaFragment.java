@@ -16,6 +16,7 @@ import com.developments.briffa.lewis.weightless.interfaces.OnItemSelectionChange
 import com.developments.briffa.lewis.weightless.models.EncyclopediaEntry;
 
 import java.util.ArrayList;
+import java.util.zip.Inflater;
 
 /**
  * Fragment: Responsible for displaying the encyclopedia entries as a grid
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 public class EncyclopediaFragment extends Fragment {
 
     private GridView mGridView;
-    private ArrayList<EncyclopediaEntry> mPlanetEntries;
+    private ArrayList<EncyclopediaEntry> mEncyclopediaEntries;
 
     public EncyclopediaFragment() {
         // Required empty public constructor
@@ -38,11 +39,13 @@ public class EncyclopediaFragment extends Fragment {
 
         View fragmentView = inflater.inflate(R.layout.fragment_encyclopedia, container, false);
 
-        EncyclopediaActivity encyclopediaActivty = (EncyclopediaActivity) getActivity();
-        mPlanetEntries = encyclopediaActivty.getList();
+        // get encyclopedia entries
+        EncyclopediaActivity encyclopediaActivity = (EncyclopediaActivity) getActivity();
+        mEncyclopediaEntries = encyclopediaActivity.getList();
 
+        // setup grid
         mGridView = fragmentView.findViewById(R.id.gridview_encyclopedia);
-        mGridView.setAdapter(new EncyclopediaFragment.ImageAdapter());
+        mGridView.setAdapter(new EncyclopediaFragment.ItemAdapter());
 
         return fragmentView;
     }
@@ -52,11 +55,11 @@ public class EncyclopediaFragment extends Fragment {
         super.onDetach();
     }
 
-    public class ImageAdapter extends BaseAdapter {
+    public class ItemAdapter extends BaseAdapter {
 
         @Override
         public int getCount() {
-            return mPlanetEntries.size();
+            return mEncyclopediaEntries.size();
         }
 
         @Override
@@ -69,13 +72,23 @@ public class EncyclopediaFragment extends Fragment {
             return 0;
         }
 
+        /**
+         * Inflates the single grid view element and binds its views to the information
+         * associated with the current encyclopedia entry
+         *
+         * @param position
+         * @param convertView
+         * @param parent
+         * @return
+         */
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-            View itemView = getActivity().getLayoutInflater().inflate(R.layout.item_encyclopedia, null);
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            View itemView = inflater.inflate(R.layout.item_encyclopedia, parent, false);
             ImageView imageView = itemView.findViewById(R.id.imageView);
             TextView textView = itemView.findViewById(R.id.textView);
-            imageView.setImageResource(mPlanetEntries.get(position).getImage());
-            textView.setText(mPlanetEntries.get(position).getName());
+            imageView.setImageResource(mEncyclopediaEntries.get(position).getImage());
+            textView.setText(mEncyclopediaEntries.get(position).getName());
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

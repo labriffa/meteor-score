@@ -25,10 +25,6 @@
             android:name=".activities.EncyclopediaActivity"
             android:parentActivityName=".activities.StartActivity">
         </activity>
-        <activity
-            android:name=".activities.EncyclopediaDetailsActivity"
-            android:parentActivityName=".activities.EncyclopediaActivity">
-        </activity>
         <activity android:name=".activities.GameOverActivity">
         </activity>
         <activity

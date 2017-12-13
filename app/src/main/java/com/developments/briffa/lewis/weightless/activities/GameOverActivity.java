@@ -9,28 +9,39 @@ import android.widget.ImageButton;
 import com.developments.briffa.lewis.weightless.R;
 import com.developments.briffa.lewis.weightless.game.GameSurfaceView;
 
+/**
+ * Activity: Responsible for displaying the game over screen. Allows the user to go back to the main
+ * menu, try again or share their score
+ *
+ * @author lewisbriffa
+ * @version 1.4
+ */
 public class GameOverActivity extends AppCompatActivity {
 
-    private ImageButton mButton;
-    private ImageButton mButton2;
-    private ImageButton mButton3;
+    private ImageButton mButtonTryAgain;
+    private ImageButton mButtonBackToMenu;
+    private ImageButton mButtonShareScore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_over);
-        mButton = (ImageButton) findViewById(R.id.imageButton);
-        mButton2 = (ImageButton) findViewById(R.id.imageButton2);
-        mButton3 = (ImageButton) findViewById(R.id.imageButton5);
 
-        mButton.setOnClickListener(new View.OnClickListener() {
+        // References
+        mButtonTryAgain = (ImageButton) findViewById(R.id.button_try_again);
+        mButtonBackToMenu = (ImageButton) findViewById(R.id.button_back_to_menu);
+        mButtonShareScore = (ImageButton) findViewById(R.id.button_share_score);
+
+        // Listeners
+        mButtonTryAgain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent gameIntent = new Intent(GameOverActivity.this, GameActivity.class);
                 startActivity(gameIntent);
             }
         });
-        mButton2.setOnClickListener(new View.OnClickListener() {
+
+        mButtonBackToMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent menuIntent = new Intent(GameOverActivity.this, StartActivity.class);
@@ -38,8 +49,11 @@ public class GameOverActivity extends AppCompatActivity {
             }
         });
 
+        // check if the high score was passed to this activity
         if(getIntent().hasExtra(GameSurfaceView.DISTANCE_TRAVELLED_KEY)) {
-            mButton3.setOnClickListener(new View.OnClickListener() {
+
+            // handle sharing for high score
+            mButtonShareScore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int score = getIntent().getIntExtra(GameSurfaceView.DISTANCE_TRAVELLED_KEY, 0);
@@ -53,5 +67,20 @@ public class GameOverActivity extends AppCompatActivity {
         }
 
         getSupportActionBar().hide();
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 }

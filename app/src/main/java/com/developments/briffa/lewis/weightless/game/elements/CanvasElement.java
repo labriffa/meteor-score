@@ -1,5 +1,14 @@
 package com.developments.briffa.lewis.weightless.game.elements;
 
+import android.graphics.Rect;
+
+/**
+ * Defines the blueprint for a generic game element object
+ * with getters and setters for default game object properties
+ *
+ * @author lewisbriffa
+ * @version 1.2
+ */
 public abstract class CanvasElement {
 
     private float x;
@@ -27,6 +36,9 @@ public abstract class CanvasElement {
     }
     public float getHeight() {
         return height;
+    }
+    public Rect getRect() {
+        return new Rect((int)x, (int)y, (int)(x + getWidth()), (int)(y + getHeight()));
     }
 
     // Setters

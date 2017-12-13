@@ -9,8 +9,8 @@ import com.developments.briffa.lewis.weightless.R;
 
 
 /**
- * Represents the activity responsible for starting the game
- * screen
+ * Activity: Responsible for displaying the game screen,
+ * makes the necessary call to start the game surface view
  *
  * @author lewisbriffa
  * created on 11/11/2017
@@ -35,26 +35,22 @@ public class GameActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
-        mGameSurfaceView.setRunning(false);
-        mGameSurfaceView.quitHandlerThread();
-        mGameSurfaceView.getMediaPlayer().stop();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mGameSurfaceView.setRunning(false);
-        mGameSurfaceView.quitHandlerThread();
-        mGameSurfaceView.getMediaPlayer().stop();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mGameSurfaceView.setRunning(false);
-        mGameSurfaceView.quitHandlerThread();
-        mGameSurfaceView.getMediaPlayer().stop();
     }
 }

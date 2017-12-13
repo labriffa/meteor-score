@@ -19,7 +19,10 @@ import android.view.ViewGroup;
 import com.developments.briffa.lewis.weightless.R;
 
 /**
- * Fragment:
+ * Fragment: Responsible for displaying the fragment settings xml file.
+ *
+ * @author lewisbriffa
+ * @version 1.3
  */
 public class SettingsFragment extends PreferenceFragmentCompat {
 
@@ -27,14 +30,24 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.pref_meteor_score);
 
+        // get user preferences
         SharedPreferences sharedPreferences = getPreferenceScreen().getSharedPreferences();
         PreferenceScreen preferenceScreen = getPreferenceScreen();
 
+        // get the users current number of coins
         String value = String.valueOf(sharedPreferences.getInt(getResources().getString(R.string.pref_user_coins_key), 0));
         Preference preference = preferenceScreen.findPreference(getResources().getString(R.string.pref_user_coins_key));
+
+        // set the number of coins as the summary
         setPreferenceSummary(preference, value);
     }
 
+    /**
+     * Sets the summary under a given preference
+     *
+     * @param preference
+     * @param value
+     */
     public void setPreferenceSummary(Preference preference, String value) {
 
         // need to find corresponding list entry based on value
@@ -48,6 +61,4 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             preference.setSummary(value);
         }
     }
-
-
 }

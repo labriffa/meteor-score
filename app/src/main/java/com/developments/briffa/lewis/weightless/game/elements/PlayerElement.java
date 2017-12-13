@@ -16,9 +16,7 @@ import com.developments.briffa.lewis.weightless.interfaces.Movable;
 public class PlayerElement extends CanvasElement implements Movable {
 
     private float dx;
-    private float dy;
     private Drawable image;
-    private Paint mPaint;
     private int milesPerHour;
 
     public PlayerElement(float x, float y, int width, int height, Drawable image)
@@ -26,27 +24,35 @@ public class PlayerElement extends CanvasElement implements Movable {
         super(x, y, width, height);
         this.image = image;
         dx = 0;
-        dy = 0;
-        mPaint = new Paint();
-        mPaint.setColor(Color.RED);
-        mPaint.setTextSize(100);
-
         milesPerHour = 5;
     }
 
+    /**
+     * Draws and updates the movement of the player, checks if the player has gone too far on
+     * either sides of the screen
+     *
+     * @param canvas
+     */
     public void move(Canvas canvas)
     {
-        // check if this object is too far left of the screen
+        // check if this object is too far left or too far right of the screen
         if(getX() < 0 || getX() + getWidth() >= canvas.getWidth()) {
             setX(getX() < 0 ? 0 : canvas.getWidth()-getWidth());
         }
 
-        setX(getX()+dx);
-        setY(getY()+dy);
+        // update player position
+        setX(getX() + dx);
+
+        // redraw the player
         image.setBounds((int) getX(), (int) getY(), (int) (getX() + getWidth()), (int) (getY() + getHeight()));
         image.draw(canvas);
     }
 
+    /**
+     * Stub method to override Movable hasPassed()
+     *
+     * @return
+     */
     @Override
     public boolean hasPassed() {
         return false;
