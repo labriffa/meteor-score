@@ -1,4 +1,5 @@
 package com.developments.briffa.lewis.weightless.activities;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,6 +26,8 @@ public class EncyclopediaActivity extends AppCompatActivity implements OnItemSel
     private ArrayList<EncyclopediaEntry> mPlanetEntries;
     private EncyclopediaManager mEncyclopediaManager;
 
+    private EncyclopediaDetailsFragment mEncyclopediaDetailsFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,25 +37,36 @@ public class EncyclopediaActivity extends AppCompatActivity implements OnItemSel
 
         setContentView(R.layout.activity_encyclopedia);
 
-        if(getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(R.string.encyclopedia_title);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-
-        EncyclopediaDetailsFragment encyclopediaDetailsFragment =
+        mEncyclopediaDetailsFragment =
                 (EncyclopediaDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.encyclopedia_details_fragment);
 
         // if were in dual fragment screen mode, initial the description fragment
         // as the first entry in the encyclopedia
-        if(encyclopediaDetailsFragment != null) {
+        if(mEncyclopediaDetailsFragment != null) {
 
             EncyclopediaEntry planetEntry = mPlanetEntries.get(0);
 
-            encyclopediaDetailsFragment.setTextViewPlanetName(planetEntry.getName());
-            encyclopediaDetailsFragment.setImageViewPlanet(planetEntry.getImage());
-            encyclopediaDetailsFragment.setTextViewPlanetDescription(planetEntry.getDescription());
+            mEncyclopediaDetailsFragment.setTextViewPlanetName(planetEntry.getName());
+            mEncyclopediaDetailsFragment.setImageViewPlanet(planetEntry.getImage());
+            mEncyclopediaDetailsFragment.setTextViewPlanetDescription(planetEntry.getDescription());
         }
 
+        // update the action bar to reflect the currently shown fragment
+        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                if(mEncyclopediaDetailsFragment == null || !(mEncyclopediaDetailsFragment.isVisible())) {
+                    if(getSupportActionBar() != null) {
+                        getSupportActionBar().setTitle(R.string.encyclopedia_title);
+                    }
+                }
+            }
+        });
+
+        // show the initial action bar title
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(R.string.encyclopedia_title);
+        }
     }
 
     /**
@@ -64,30 +78,32 @@ public class EncyclopediaActivity extends AppCompatActivity implements OnItemSel
      */
     public void onItemSelectionChange(int position) {
 
-        EncyclopediaDetailsFragment encyclopediaDetailsFragment =
+        mEncyclopediaDetailsFragment =
                 (EncyclopediaDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.encyclopedia_details_fragment);
 
+
         // check if were in dual screen fragment mode
-        if(encyclopediaDetailsFragment != null) {
+        if(mEncyclopediaDetailsFragment != null) {
 
             EncyclopediaEntry planetEntry = mPlanetEntries.get(position);
 
-            encyclopediaDetailsFragment.setTextViewPlanetName(planetEntry.getName());
-            encyclopediaDetailsFragment.setImageViewPlanet(planetEntry.getImage());
-            encyclopediaDetailsFragment.setTextViewPlanetDescription(planetEntry.getDescription());
+            mEncyclopediaDetailsFragment.setTextViewPlanetName(planetEntry.getName());
+            mEncyclopediaDetailsFragment.setImageViewPlanet(planetEntry.getImage());
+            mEncyclopediaDetailsFragment.setTextViewPlanetDescription(planetEntry.getDescription());
+
         } else {
 
             // explicitly create the details fragment
-            encyclopediaDetailsFragment = new EncyclopediaDetailsFragment();
+            mEncyclopediaDetailsFragment = new EncyclopediaDetailsFragment();
 
             // pass the id of the encyclopedia entry
             Bundle bundle = new Bundle();
             bundle.putInt(EncyclopediaDetailsFragment.ENTRY_INDEX, position);
-            encyclopediaDetailsFragment.setArguments(bundle);
+            mEncyclopediaDetailsFragment.setArguments(bundle);
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
             // replace the encyclopedia fragment
-            fragmentTransaction.replace(R.id.activity_encyclopedia, encyclopediaDetailsFragment);
+            fragmentTransaction.replace(R.id.activity_encyclopedia, mEncyclopediaDetailsFragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         }

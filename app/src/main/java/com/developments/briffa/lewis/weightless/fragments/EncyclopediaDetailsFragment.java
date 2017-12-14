@@ -72,8 +72,10 @@ public class EncyclopediaDetailsFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        // change the action bar title to reflect the currently selected encyclopedia entry
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(mTextViewPlanetName.getText());
+        if(getArguments() != null) {
+            // change the action bar title to reflect the currently selected encyclopedia entry
+            ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(mTextViewPlanetName.getText());
+        }
     }
 
     /**
