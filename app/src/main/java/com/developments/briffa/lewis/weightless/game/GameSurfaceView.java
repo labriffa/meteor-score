@@ -13,18 +13,18 @@ import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 
 import com.developments.briffa.lewis.weightless.R;
-import com.developments.briffa.lewis.weightless.game.elements.HudElement;
+import com.developments.briffa.lewis.weightless.game.elements.hud.HudElement;
 import com.developments.briffa.lewis.weightless.game.elements.hazards.HazardElement;
 import com.developments.briffa.lewis.weightless.game.utilities.CollisionDetector;
 import com.developments.briffa.lewis.weightless.activities.GameOverActivity;
 import com.developments.briffa.lewis.weightless.game.elements.hazards.StandardMeteor;
-import com.developments.briffa.lewis.weightless.game.elements.PauseElement;
 import com.developments.briffa.lewis.weightless.game.elements.PlayerElement;
 import com.developments.briffa.lewis.weightless.game.elements.SpaceBackgroundElement;
 import com.developments.briffa.lewis.weightless.game.elements.hazards.SpinningMeteor;
@@ -33,6 +33,7 @@ import com.developments.briffa.lewis.weightless.factories.GameElementFactory;
 import com.developments.briffa.lewis.weightless.game.elements.ammo.BulletElement;
 
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 /**
  * Represents a game type surface view object responsible
@@ -46,35 +47,35 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
     private SurfaceHolder mSurfaceHolder;
     private GameElementFactory mGameElementFactory;
 
-    // BOOLEANS
+    // Booleans
     private boolean isSound;
     private boolean hasInitialized;
 
-    // GAME OBJECTS
+    // Game Objects
     private SpaceBackgroundElement mSpaceBackgroundElement;
     private PlayerElement mPlayerElement;
-    private PauseElement mPauseElement;
+    private HudElement mHudElement;
 
-    // GAME OBJECT COLLECTIONS
+    // Game Object Collections
     private ArrayList<BulletElement> mBullets;
     private ArrayList<HazardElement> mHazards;
     private ArrayList<CoinElement> mCollectibles;
 
-    // SOUNDS
+    // Sounds
     private MediaPlayer mThemePlayer;
     private MediaPlayer mCoinMediaPlayer;
 
-    // BACKGROUND ACTIVITIES
+    // Background Activities
     private GameRunnable mGameRunnable;
     private Thread mThread;
 
-    // SENSORS
+    // Sensors
     private Sensor mSensor;
     private SensorManager mSensorManager;
     private SensorEventListener mSensorEventListener;
     private Vibrator mVibrator;
 
-    // SCORE
+    // Score
     private int distanceTravelled = 0;
     public static final String DISTANCE_TRAVELLED_KEY = "Travelled Distance";
 
@@ -115,7 +116,7 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if(x >= mPauseElement.getX() && x <= mPauseElement.getX()+125 && y >= mPauseElement.getY() && y <= mPauseElement.getY()+100) {
+                if(mHudElement.isPauseLocation(x, y)) {
                     if(mGameRunnable.isRunning()) {
                         pause();
                     } else {
@@ -161,6 +162,7 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         int userCoins = sharedPreferences.getInt(getResources().getString(R.string.pref_user_coins_key), -1) + 1;
         sharedPreferences.edit().putInt(getResources().getString(R.string.pref_user_coins_key), userCoins).apply();
+        mHudElement.getCoinHudElement().updateUserCoins(String.valueOf(userCoins));
     }
 
     /**
@@ -185,7 +187,7 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
     }
 
     /**
-     * Creates a new background thread and resumes the them music
+     * Creates a new background thread and resumes the theme music
      */
     public void resume() {
         mGameRunnable.setIsRunning(true);
@@ -275,10 +277,14 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
         // create initial game objects
         mSpaceBackgroundElement = (SpaceBackgroundElement) mGameElementFactory.getInstance("space-background");
         mPlayerElement = (PlayerElement) mGameElementFactory.getInstance("player");
-        mPauseElement = (PauseElement) mGameElementFactory.getInstance("pause");
+        mHudElement = (HudElement) mGameElementFactory.getInstance("hud");
         mCollectibles.add((CoinElement) mGameElementFactory.getInstance("coin"));
         mHazards.add((SpinningMeteor) mGameElementFactory.getInstance("spinning-meteor"));
-        mHazards.add((StandardMeteor) mGameElementFactory.getInstance("meteor"));
+        mHazards.add((StandardMeteor) mGameElementFactory.getInstance("standard-meteor"));
+    }
+
+    public void setIsRunning(boolean isRunning) {
+        mGameRunnable.setIsRunning(isRunning);
     }
 
 
@@ -300,16 +306,18 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
 
         if(mSurfaceHolder.getSurface().isValid()) {
 
-            clearScreen(canvas);
+            if(canvas != null) {
+                clearScreen(canvas);
 
-            drawBackground(canvas);
-            drawHud(canvas);
-            drawCollectibles(canvas);
-            drawHazards(canvas);
+                drawBackground(canvas);
+                drawHud(canvas);
+                drawCollectibles(canvas);
+                drawHazards(canvas);
 
-            mPlayerElement.move(canvas);
-            distanceTravelled += mPlayerElement.getSpeed();
-            mSurfaceHolder.unlockCanvasAndPost(canvas);
+                mPlayerElement.move(canvas);
+                distanceTravelled += mPlayerElement.getSpeed();
+                mSurfaceHolder.unlockCanvasAndPost(canvas);
+            }
         }
     }
 
@@ -328,17 +336,7 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
      * @param canvas
      */
     private void drawHud(Canvas canvas) {
-
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        int userCoins = sharedPreferences.getInt(getResources().getString(R.string.pref_user_coins_key), -1);
-
-        if(-1 == userCoins) {
-            sharedPreferences.edit().putInt(getResources().getString(R.string.pref_user_coins_key), 0).apply();
-            userCoins = 0;
-        }
-
-        HudElement hudElement = new HudElement(getContext(), String.valueOf(userCoins));
-        hudElement.draw(canvas);
+        mHudElement.draw(canvas);
     }
 
     /**
@@ -360,7 +358,7 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
                 }
 
                 mCollectibles.remove(i);
-                mCollectibles.add((CoinElement) collectible.recreate(mGameElementFactory));
+                mCollectibles.add((CoinElement) mGameElementFactory.getInstance(collectible.getElementName()));
             }
         }
     }
@@ -372,6 +370,7 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
      * @param canvas
      */
     private void drawHazards(Canvas canvas) {
+
         // go hazards checking to see if the player collided with
         // any of them
         for (int i = 0; i < mHazards.size(); i++) {
@@ -403,7 +402,7 @@ public class GameSurfaceView extends SurfaceView implements View.OnTouchListener
 
             if (hazardElement.getHealth() <= 0 || hazardElement.hasPassed()) {
                 mHazards.remove(i);
-                mHazards.add((HazardElement) hazardElement.recreate(mGameElementFactory));
+                mHazards.add((HazardElement) mGameElementFactory.getInstance(hazardElement.getElementName()));
             }
 
             if (CollisionDetector.hasCollided(hazardElement, mPlayerElement)) {

@@ -18,19 +18,15 @@ import com.developments.briffa.lewis.weightless.game.GameSurfaceView;
  */
 public class GameOverActivity extends AppCompatActivity {
 
-    private ImageButton mButtonTryAgain;
-    private ImageButton mButtonBackToMenu;
-    private ImageButton mButtonShareScore;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_over);
 
         // References
-        mButtonTryAgain = (ImageButton) findViewById(R.id.button_try_again);
-        mButtonBackToMenu = (ImageButton) findViewById(R.id.button_back_to_menu);
-        mButtonShareScore = (ImageButton) findViewById(R.id.button_share_score);
+        ImageButton mButtonTryAgain = (ImageButton) findViewById(R.id.button_try_again);
+        ImageButton mButtonBackToMenu = (ImageButton) findViewById(R.id.button_back_to_menu);
+        ImageButton mButtonShareScore = (ImageButton) findViewById(R.id.button_share_score);
 
         // Listeners
         mButtonTryAgain.setOnClickListener(new View.OnClickListener() {

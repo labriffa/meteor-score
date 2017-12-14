@@ -59,4 +59,9 @@ public class BulletElement extends CanvasElement implements Movable {
     public int getDamage() {
         return damage;
     }
+
+    @Override
+    public String getElementName() {
+        return "bullet";
+    }
 }

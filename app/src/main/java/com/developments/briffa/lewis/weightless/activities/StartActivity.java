@@ -17,16 +17,12 @@ import com.developments.briffa.lewis.weightless.R;
  */
 public class StartActivity extends AppCompatActivity {
 
-    private ImageButton mButtonStart;
-    private ImageButton mButtonEncyclopedia;
-    private ImageButton mButtonSettings;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        mButtonStart = (ImageButton) findViewById(R.id.button_start);
+        ImageButton mButtonStart = (ImageButton) findViewById(R.id.button_start);
         mButtonStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -35,7 +31,7 @@ public class StartActivity extends AppCompatActivity {
             }
         });
 
-        mButtonEncyclopedia = (ImageButton) findViewById(R.id.button_encyclopedia);
+        ImageButton mButtonEncyclopedia = (ImageButton) findViewById(R.id.button_encyclopedia);
         mButtonEncyclopedia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -44,7 +40,7 @@ public class StartActivity extends AppCompatActivity {
             }
         });
 
-        mButtonSettings = (ImageButton) findViewById(R.id.button_settings);
+        ImageButton mButtonSettings = (ImageButton) findViewById(R.id.button_settings);
         mButtonSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,6 +49,8 @@ public class StartActivity extends AppCompatActivity {
             }
         });
 
-        getSupportActionBar().hide();
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
     }
 }

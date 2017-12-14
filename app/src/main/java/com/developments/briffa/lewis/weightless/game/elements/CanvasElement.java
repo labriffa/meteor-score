@@ -24,6 +24,8 @@ public abstract class CanvasElement {
         this.height = height;
     }
 
+    public CanvasElement() {}
+
     // Getters
     public float getX() {
         return x;
@@ -48,4 +50,6 @@ public abstract class CanvasElement {
     public void setY(float y) {
         this.y = y;
     }
+
+    public abstract String getElementName();
 }

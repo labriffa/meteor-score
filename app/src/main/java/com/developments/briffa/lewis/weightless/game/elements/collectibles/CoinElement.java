@@ -1,22 +1,31 @@
 package com.developments.briffa.lewis.weightless.game.elements.collectibles;
 
+import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 
-import com.developments.briffa.lewis.weightless.factories.GameElementFactory;
+import com.developments.briffa.lewis.weightless.R;
 import com.developments.briffa.lewis.weightless.game.elements.CanvasElement;
 import com.developments.briffa.lewis.weightless.interfaces.Movable;
-import com.developments.briffa.lewis.weightless.interfaces.Recreatable;
 
-public class CoinElement extends CanvasElement implements Movable, Recreatable {
+public class CoinElement extends CanvasElement implements Movable {
 
     private float dy;
     private Drawable image;
 
-    public CoinElement(float x, float y, int width, int height, Drawable image) {
-        super(x,y, width, height);
-        this.image = image;
+    private static final int COIN_WIDTH = 50;
+    private static final int COIN_HEIGHT = 50;
+    private static final int COIN_IMAGE = R.drawable.coin_spin;
+
+    public CoinElement(Context context, Canvas canvas) {
+        super((int)(Math.random() * canvas.getWidth()),
+                canvas.getHeight(),
+                COIN_WIDTH,
+                COIN_HEIGHT
+        );
+
+        this.image = ContextCompat.getDrawable(context, COIN_IMAGE);
         dy = -10;
     }
 
@@ -44,14 +53,8 @@ public class CoinElement extends CanvasElement implements Movable, Recreatable {
         return getY() <= -getWidth();
     }
 
-    /**
-     * Recreates a new version of itself via the passed game element factory
-     *
-     * @param gameElementFactory
-     * @return CanvasElement
-     */
     @Override
-    public CanvasElement recreate(GameElementFactory gameElementFactory) {
-        return gameElementFactory.getInstance("coin");
+    public String getElementName() {
+        return "coin";
     }
 }

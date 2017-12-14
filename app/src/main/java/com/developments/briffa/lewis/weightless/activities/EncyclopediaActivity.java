@@ -34,8 +34,10 @@ public class EncyclopediaActivity extends AppCompatActivity implements OnItemSel
 
         setContentView(R.layout.activity_encyclopedia);
 
-        getSupportActionBar().setTitle(R.string.encyclopedia_title);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(R.string.encyclopedia_title);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         EncyclopediaDetailsFragment encyclopediaDetailsFragment =
                 (EncyclopediaDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.encyclopedia_details_fragment);
@@ -94,6 +96,4 @@ public class EncyclopediaActivity extends AppCompatActivity implements OnItemSel
     public ArrayList<EncyclopediaEntry> getList() {
         return mPlanetEntries;
     }
-
-
 }

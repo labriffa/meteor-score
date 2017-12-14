@@ -1,10 +1,13 @@
 package com.developments.briffa.lewis.weightless.game.elements.hazards;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 
+import com.developments.briffa.lewis.weightless.R;
 import com.developments.briffa.lewis.weightless.factories.GameElementFactory;
 import com.developments.briffa.lewis.weightless.game.elements.CanvasElement;
 import com.developments.briffa.lewis.weightless.game.elements.hazards.HazardElement;
@@ -13,18 +16,23 @@ public class SpinningMeteor extends HazardElement {
 
     private float dy;
     private float dx;
-    private Paint mPaint;
     private Drawable image;
-    private int health;
 
-    public SpinningMeteor(float x, float y, int width, int height, Drawable drawable) {
-        super(x, y, width, height);
-        dx = 6f;
-        dy = -8;
-        mPaint = new Paint();
-        mPaint.setColor(Color.YELLOW);
-        image = drawable;
-        health = width;
+    private static final int SPINNING_METEOR_IMAGE = R.drawable.spinning_meteor;
+    private static final int SPINNING_METEOR_SIZE_DIVIDER = 3;
+    private static final int SPINNING_METEOR_OFFSCREEN_MULTIPLIER = 4;
+    private static final int DELTA_X = 6;
+    private static final int DELTA_Y = -8;
+
+    public SpinningMeteor(Context context, Canvas canvas) {
+        super((int) (Math.random() * canvas.getWidth()),
+                canvas.getHeight() * SPINNING_METEOR_OFFSCREEN_MULTIPLIER,
+                (int) (Math.random() * canvas.getWidth() / SPINNING_METEOR_SIZE_DIVIDER)
+        );
+
+        dx = DELTA_X;
+        dy = DELTA_Y;
+        image = ContextCompat.getDrawable(context, SPINNING_METEOR_IMAGE);
     }
 
     public void move(Canvas canvas) {
@@ -34,16 +42,12 @@ public class SpinningMeteor extends HazardElement {
             setX(getX() + dx);
 
             if(getX() <= 0) {
-                dx = 6f;
+                dx = DELTA_X;
             } else if(getX() >= canvas.getWidth() - getWidth()) {
-                dx = -6f;
+                dx = -DELTA_X;
             }
 
-            Paint paint = new Paint();
-            paint.setColor(Color.RED);
-
-            canvas.drawRect((int) (getX() + getHealth()), (int)(getY()+getHeight()+50), (int) (getX() + getWidth()), (int)(getY()+getHeight()+75), paint);
-            canvas.drawRect((int)getX(), (int)(getY()+getHeight()+50), (int) (getX() + getHealth()), (int)(getY()+getHeight()+75), mPaint);
+            drawLifeBar(canvas);
             image.setBounds((int) getX(), (int) getY(), (int) (getX() + getWidth()), (int) (getY() + getHeight()));
             image.draw(canvas);
         }
@@ -53,16 +57,12 @@ public class SpinningMeteor extends HazardElement {
         return getY() <= -getWidth();
     }
 
-    public int getHealth() {
-        return health;
+    public void damage(int hitPoint) {
+        setHealth(getHealth() - hitPoint);
     }
 
     @Override
-    public CanvasElement recreate(GameElementFactory gameElementFactory) {
-        return gameElementFactory.getInstance("spinning-meteor");
-    }
-
-    public void damage(int hitPoint) {
-        health -= hitPoint;
+    public String getElementName() {
+        return "spinning-meteor";
     }
 }

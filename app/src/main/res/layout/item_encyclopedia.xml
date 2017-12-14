@@ -18,7 +18,8 @@
         android:cropToPadding="false"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="8dp"
+        android:scaleType="fitCenter"/>
 
     <TextView
         android:text="Mercury"
@@ -36,5 +37,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="16dp"
         app:layout_constraintVertical_bias="0.0"
-        android:textColor="@android:color/background_dark"/>
+        android:textColor="@android:color/background_dark"
+        android:textAlignment="center"/>
 </android.support.constraint.ConstraintLayout>

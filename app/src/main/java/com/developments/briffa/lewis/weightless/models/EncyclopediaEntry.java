@@ -3,10 +3,9 @@ package com.developments.briffa.lewis.weightless.models;
 public class EncyclopediaEntry {
     private String name;
     private int image;
-    private int photo;
     private String description;
 
-    public EncyclopediaEntry(String name, int image, String description, int photo) {
+    public EncyclopediaEntry(String name, int image, String description) {
         this.name = name;
         this.image = image;
         this.description = description;

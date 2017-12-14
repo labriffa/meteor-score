@@ -1,10 +1,13 @@
 package com.developments.briffa.lewis.weightless.game.elements;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 
+import com.developments.briffa.lewis.weightless.R;
 import com.developments.briffa.lewis.weightless.interfaces.Movable;
 
 /**
@@ -13,18 +16,23 @@ import com.developments.briffa.lewis.weightless.interfaces.Movable;
  * @author lewisbriffa
  * created on 11/11/2017
  */
-public class PlayerElement extends CanvasElement implements Movable {
+public class PlayerElement extends CanvasElement {
 
     private float dx;
     private Drawable image;
-    private int milesPerHour;
 
-    public PlayerElement(float x, float y, int width, int height, Drawable image)
+    private static final int PLAYER_STARTING_POS_X = 0;
+    private static final int PLAYER_STARTING_POS_Y = 160;
+    private static final int PLAYER_WIDTH = 180;
+    private static final int PLAYER_HEIGHT = 280;
+    private static final int PLAYER_IMAGE = R.drawable.rocket;
+    private static final int MILES_PER_HOUR = 5;
+
+    public PlayerElement(Context context, Canvas canvas)
     {
-        super(x, y, width, height);
-        this.image = image;
+        super(PLAYER_STARTING_POS_X, PLAYER_STARTING_POS_Y, PLAYER_WIDTH, PLAYER_HEIGHT);
+        this.image = ContextCompat.getDrawable(context, PLAYER_IMAGE);
         dx = 0;
-        milesPerHour = 5;
     }
 
     /**
@@ -48,20 +56,15 @@ public class PlayerElement extends CanvasElement implements Movable {
         image.draw(canvas);
     }
 
-    /**
-     * Stub method to override Movable hasPassed()
-     *
-     * @return
-     */
-    @Override
-    public boolean hasPassed() {
-        return false;
-    }
-
-    public int getSpeed() { return milesPerHour; }
+    public int getSpeed() { return MILES_PER_HOUR; }
 
     public void setDx(float dx)
     {
         this.dx = dx;
+    }
+
+    @Override
+    public String getElementName() {
+        return "player";
     }
 }

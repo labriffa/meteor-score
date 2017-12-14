@@ -17,8 +17,7 @@ import com.developments.briffa.lewis.weightless.R;
  */
 public class GameActivity extends AppCompatActivity {
 
-    private GameSurfaceView mGameSurfaceView;
-    private RelativeLayout mRelativeLayout;
+    GameSurfaceView mGameSurfaceView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +26,7 @@ public class GameActivity extends AppCompatActivity {
 
         mGameSurfaceView = new GameSurfaceView(this);
 
-        mRelativeLayout = (RelativeLayout) findViewById(R.id.activity_game);
+        RelativeLayout mRelativeLayout = (RelativeLayout) findViewById(R.id.activity_game);
 
         mRelativeLayout.addView(mGameSurfaceView);
 
@@ -37,6 +36,7 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        mGameSurfaceView.setIsRunning(true);
     }
 
     @Override
@@ -47,6 +47,7 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        mGameSurfaceView.setIsRunning(false);
     }
 
     @Override

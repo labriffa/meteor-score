@@ -1,5 +1,6 @@
 package com.developments.briffa.lewis.weightless.game.elements;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -13,8 +14,11 @@ public class SpaceBackgroundElement extends CanvasElement {
     private Paint mPaintStars;
     private Paint mPaintBackground;
 
-    public SpaceBackgroundElement(float x, float y, int width, int height, boolean isSpace) {
-        super(x, y, width, height);
+    private static final int SPACE_STARTING_POS_X = 0;
+    private static final int SPACE_STARTING_POS_Y = 0;
+
+    public SpaceBackgroundElement(Context context, Canvas canvas, boolean isSpace) {
+        super(SPACE_STARTING_POS_X, SPACE_STARTING_POS_Y, canvas.getWidth(), canvas.getHeight());
 
         mPaintBackground = new Paint();
 
@@ -46,5 +50,10 @@ public class SpaceBackgroundElement extends CanvasElement {
                     (float)Math.random() * 2 + 2,
                     mPaintStars);
         }
+    }
+
+    @Override
+    public String getElementName() {
+        return "space-background";
     }
 }

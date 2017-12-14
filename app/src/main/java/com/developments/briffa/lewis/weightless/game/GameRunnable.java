@@ -26,10 +26,6 @@ public class GameRunnable implements Runnable {
     @Override
     public void run() {
         while(isRunning) {
-            if(Thread.currentThread().isInterrupted()) {
-                break;
-            }
-
             mGameSurfaceView.draw();
         }
     }
