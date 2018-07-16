@@ -6,3 +6,5 @@ of unlockable planets.
 
 ![alt text](https://res.cloudinary.com/dj7k0lade/image/upload/v1531764164/github/normal-bullets.png)
 ![alt text](https://res.cloudinary.com/dj7k0lade/image/upload/v1531764223/github/wave-bullets.png)
+![alt text](https://res.cloudinary.com/dj7k0lade/image/upload/v1531764361/github/encyclopedia.png)
+
