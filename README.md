@@ -5,4 +5,4 @@ Salford this space shooter sees players shooting meteors as they collect coins t
 of unlockable planets.
 
 ![alt text](https://res.cloudinary.com/dj7k0lade/image/upload/v1531764164/github/normal-bullets.png)
-![alt text](https://res.cloudinary.com/dj7k0lade/image/upload/v1531764164/github/normal-bullets.png)
+![alt text](https://res.cloudinary.com/dj7k0lade/image/upload/v1531764223/github/wave-bullets.png)
